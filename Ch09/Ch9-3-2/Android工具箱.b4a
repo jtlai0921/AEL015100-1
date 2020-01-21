@@ -1,0 +1,77 @@
+﻿Version=2.71
+IconFile=
+NumberOfModules=0
+Package=ch09.gui.b4a.example
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=
+NumberOfFiles=1
+File1=Main.bal
+NumberOfLibraries=1
+Library1=core
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: Android工具箱
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+
+End Sub
+
+Sub Globals
+
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+    Activity.LoadLayout("Main")
+    Activity.Title = "Android工具箱"
+End Sub
+
+Sub Activity_Resume
+
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
+
+Sub Button1_Click
+    Dim i As Intent
+    i.Initialize(i.ACTION_VIEW, "http://www.google.com.tw")
+    StartActivity(i)
+End Sub
+
+Sub Button2_Click
+    Dim i As Intent
+    Dim lat, lon As String
+    lat = "25.04692437135412"
+    lon = "121.5161783959678"
+    i.Initialize(i.ACTION_VIEW, "geo:" & lat & "," & lon & "?q=" & lat & "," & lon)
+    ' i.SetComponent("googlemaps")
+    StartActivity(i)
+End Sub
+
+Sub Button3_Click
+    Dim i As Intent
+    i.Initialize(i.ACTION_VIEW, "tel:123456789")
+    StartActivity(i)
+End Sub
+
+Sub Button4_Click
+    Dim i As Intent
+    i.Initialize(i.ACTION_VIEW, "sms:123456789")
+    i.PutExtra("sms_body", "這是一封測試簡訊")
+    StartActivity(i)
+End Sub

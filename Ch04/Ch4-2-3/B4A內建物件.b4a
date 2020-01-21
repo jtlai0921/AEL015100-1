@@ -1,0 +1,71 @@
+﻿Version=2.7
+IconFile=
+NumberOfModules=0
+Package=ch04.gui.b4a.example
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=
+NumberOfFiles=1
+File1=main.bal
+NumberOfLibraries=1
+Library1=core
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: B4A內建物件
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+
+End Sub
+
+Sub Globals
+	'These global variables will be redeclared each time the activity is created.
+	'These variables can only be accessed from this module.
+	Dim lblOutput As Label
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+	'Do not forget to load the layout file created with the visual designer. For example:
+	Activity.LoadLayout("Main")
+	Activity.Title = "B4A內建物件"
+End Sub
+
+Sub Activity_Resume
+
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
+
+Sub Button1_Click
+    Dim out = "", f As String
+    Dim now As Long
+    ' 取得裝置的日期時間格式
+    f = DateTime.DeviceDefaultDateFormat
+    out = out & "日期格式: " & f & CRLF
+    f = DateTime.DeviceDefaultTimeFormat
+    out = out & "時間格式: " & f & CRLF
+    ' 指定日期格式
+    now = DateTime.now
+    out = out & "今天日期: " & DateTime.date(now) & CRLF
+    DateTime.DateFormat = "yyyy/M/d"
+    out = out & "今天日期: " & DateTime.date(now) & CRLF
+    ' 指定時間格式
+    out = out & "現在時間: " & DateTime.Time(now) & CRLF
+    DateTime.TimeFormat = "ah:mm:ss"
+    out = out & "現在時間: " & DateTime.Time(now) & CRLF
+    lblOutput.Text = out
+End Sub

@@ -1,0 +1,84 @@
+﻿Version=2.7
+IconFile=
+NumberOfModules=0
+Package=ch08.gui.b4a.example
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=
+NumberOfFiles=3
+File1=Main.bal
+File2=phone_on.jpg
+File3=phone_silent.png
+NumberOfLibraries=1
+Library1=core
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: 行動Memo(I)
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+
+End Sub
+
+Sub Globals
+    Dim TabHost1 As TabHost
+	Dim edtNote1, edtNote2, edtNote3 As EditText
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+	Activity.LoadLayout("Main")
+	Activity.Title = "行動Memo(I)-記事1"
+	Activity.AddMenuItem("結束", "ExitApp")
+	' 建立EditText元件
+	edtNote1.Initialize("")
+	edtNote1.Gravity = Gravity.LEFT + Gravity.TOP
+	edtNote1.SingleLine = False
+	edtNote2.Initialize("")
+	edtNote2.Gravity = Gravity.LEFT + Gravity.TOP
+	edtNote2.SingleLine = False
+	edtNote2.TextColor = Colors.Yellow
+	edtNote3.Initialize("")
+	edtNote3.Gravity = Gravity.LEFT + Gravity.TOP
+	edtNote3.SingleLine = False
+	edtNote3.TextColor = Colors.Red
+	' 新增標籤
+	Dim png, jpg As Bitmap
+	png = LoadBitmap(File.DirAssets, "phone_silent.png")
+	jpg = LoadBitmap(File.DirAssets, "phone_on.jpg")
+	TabHost1.AddTabWithIcon2("記事1", png, jpg, edtNote1)
+	TabHost1.AddTab2("記事2", edtNote2)
+	TabHost1.AddTab2("記事3", edtNote3)
+End Sub
+
+Sub Activity_Resume
+
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
+
+Sub ExitApp_Click
+    Dim result As Int
+	result = Msgbox2("確認結束行動Memo?", "行動Memo", "確認", "", "取消", Null)
+	If result = DialogResponse.POSITIVE Then
+	    Activity.Finish()
+		ExitApplication
+	End If
+End Sub
+
+Sub TabHost1_TabChanged
+    Activity.Title = "行動Memo(I)-記事" & (TabHost1.CurrentTab + 1)
+End Sub

@@ -1,0 +1,77 @@
+﻿Version=2.71
+IconFile=
+NumberOfModules=0
+Package=ch16.gui.b4a.example
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=
+NumberOfFiles=1
+File1=Main.bal
+NumberOfLibraries=2
+Library1=core
+Library2=gps
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: 我在哪裡
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+    Dim myGPS As GPS
+End Sub
+
+Sub Globals
+    Dim edtLat As EditText
+    Dim edtLon As EditText
+    Dim WebView1 As WebView
+    Dim lat, lon As Double
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+    Activity.LoadLayout("Main")
+    Activity.Title = "我在哪裡"
+    If FirstTime Then
+        myGPS.Initialize("GPS")
+    End If
+    edtLon.Text = "121.5165"
+    edtLat.Text = "25.0471"
+End Sub
+
+Sub Activity_Resume
+    If myGPS.GPSEnabled = False Then
+        ToastMessageShow("請啟用裝置的GPS...", True)
+        StartActivity(myGPS.LocationSettingsIntent) ' 啟動設定頁面
+    Else
+        myGPS.Start(3000, 5) ' 啟動GPS
+    End If
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+    myGPS.Stop()
+End Sub
+
+Sub GPS_LocationChanged (Location1 As Location)
+    lat = NumberFormat(Location1.Latitude, 0, 6)
+    lon = NumberFormat(Location1.Longitude, 0, 6)
+    edtLat.Text = lat
+    edtLon.Text = lon
+End Sub
+
+Sub GPS_UserEnabled (Enabled As Boolean)
+    ToastMessageShow("裝置的GPS已經啟用 = " & Enabled, True)
+End Sub
+
+Sub Button1_Click
+    Dim pos As String 
+    pos = edtLat.Text & "," & edtLon.Text
+    WebView1.LoadUrl("http://maps.googleapis.com/maps/api/staticmap?center=" & pos & "&zoom=12&size=400x400&maptype=roadmap&markers=size:medium%7Ccolor:blue%7C" & pos & "&sensor=false")
+End Sub

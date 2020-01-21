@@ -1,0 +1,97 @@
+﻿Version=2.7
+IconFile=
+NumberOfModules=0
+Package=ch08.gui.b4a.example
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=
+NumberOfFiles=1
+File1=Main.bal
+NumberOfLibraries=1
+Library1=core
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: 猜數字遊戲
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+
+End Sub
+
+Sub Globals
+    Dim edtNumber As EditText
+    Dim lblMessage As Label
+    Dim Button1 As Button
+    Dim target As Int
+    Dim time As Int
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+    Activity.LoadLayout("Main")
+    Activity.Title = "猜數字遊戲"
+    Button1.Enabled = False
+    Activity.AddMenuItem("開始新遊戲", "BeginGame")
+    Activity.AddMenuItem("結束遊戲", "StopGame")
+End Sub
+
+Sub Activity_Resume
+
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
+
+Sub NewGame
+    target = Rnd(1, 100)
+    time = 0
+    Button1.Enabled = True
+    edtNumber.Text = ""
+    lblMessage.Text = "請輸入數字..."
+	Msgbox("請輸入數字開始遊戲", "猜數字遊戲")
+End Sub
+
+Sub BeginGame_Click
+    NewGame
+End Sub
+
+Sub StopGame_Click
+    Button1.Enabled = False
+    edtNumber.Text = ""
+    lblMessage.Text = "遊戲結束..."
+End Sub
+
+Sub Button1_Click
+    Dim num As Int = edtNumber.Text
+    time = time + 1
+    If num = target Then
+        lblMessage.Text = "猜中數字: " & target
+        Dim result As Int
+        result = Msgbox2("共猜: " & time & "次, 按[確定]鈕再玩一次.", "猜數字遊戲",  "確定", "", "結束", Null)
+        If result = DialogResponse.POSITIVE Then
+            NewGame
+		Else
+            Button1.Enabled = False
+            lblMessage.Text = "遊戲結束..."
+        End If
+    Else 
+        If num > target Then
+            ToastMessageShow(num & " 數字太大...", False)
+        Else
+            ToastMessageShow(num & " 數字太小...", False)
+        End If
+    End If	
+    edtNumber.Text = ""
+End Sub

@@ -1,0 +1,132 @@
+﻿Version=2.71
+IconFile=
+NumberOfModules=0
+Package=ch15.gui.b4a.example
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=
+NumberOfFiles=1
+File1=Main.bal
+NumberOfLibraries=5
+Library1=core
+Library2=http
+Library3=httputils2
+Library4=json
+Library5=stringutils
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: 搜尋Flickr分享圖片
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+
+End Sub
+
+Sub Globals
+    Dim urlBegin, urlEnd As String 
+    urlBegin = "http://api.flickr.com/services/feeds/photos_public.gne?tags="
+    urlEnd = "&tagmode=any&format=json&jsoncallback=?"
+    Dim edtKeyword As EditText
+    Dim igv1 As ImageView
+    Dim igv2 As ImageView
+    Dim igv3 As ImageView
+    Dim igv4 As ImageView
+    Dim igv5 As ImageView
+    Dim igv6 As ImageView
+    Dim igv7 As ImageView
+    Dim igv8 As ImageView
+    Dim igv9 As ImageView
+    Dim arrImgV() As ImageView
+    Dim ImageIndex As Int = 0
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+    Activity.LoadLayout("Main")
+    Activity.Title = "搜尋Flickr分享圖片" 
+    ' 建立ImageView元件陣列
+    arrImgV = Array As ImageView(igv1, igv2, igv3, igv4, _
+                          igv5, igv6, igv7, igv8, igv9)
+    ResetImageView   ' 重設ImageView元件
+End Sub
+
+Sub Activity_Resume
+
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
+
+Sub ResetImageView
+    ' 走訪活動的所有元件
+    For I = 0 To Activity.NumberOfViews - 1
+        ' 判斷是否是ImageView元件
+        If Activity.GetView(I) Is ImageView Then 
+            ' 指定元件的色彩
+            Activity.GetView(I).Color = Colors.White
+        End If	
+    Next
+End Sub
+
+Sub Button1_Click
+    Dim job As HttpJob
+    job.Initialize("JSONJob", Me)
+	job.Download(urlBegin &  edtKeyword.Text & urlEnd)
+    ProgressDialogShow2("搜尋Flickr分享圖片...", False)
+End Sub
+
+Sub JobDone(Job As HttpJob)
+    Select Job.JobName
+       Case "JSONJob"   ' 下載JSON資料
+           JSONJobDone(Job)
+       Case "ImageJob"  ' 下載圖片
+           ImageJobDone(Job)
+    End Select
+    Job.Release()
+End Sub
+
+Sub JSONJobDone(Job As HttpJob)
+    Dim rStr As String
+    If Job.Success = True Then
+        rStr = Job.GetString()  ' 取得JSON字串
+        ' 刪除前後的 ( 和 ) 字元
+        rStr = rStr.SubString2(1, rStr.Length)
+        ' 剖析JSON字串
+        Dim JSON As JSONParser
+        JSON.Initialize(rStr)
+        Dim itemMap As Map
+        itemMap = JSON.NextObject()
+        Dim itemList As List
+        itemList = itemMap.Get("items")
+        For i = 0 To 8  ' 只取9張圖片 
+            Dim item, media As Map
+            item = itemList.Get(i)  ' 取得每一項目
+            media = item.Get("media") ' 取出圖片URL
+            Dim ImageJob As HttpJob   ' 建立下載圖片工作
+            ImageJob.Initialize("ImageJob", Me)
+            ImageJob.Download(media.Get("m"))
+        Next
+    Else
+        ToastMessageShow("錯誤: " & Job.ErrorMessage, True)
+    End If
+End Sub
+
+Sub ImageJobDone(Job As HttpJob)
+    If Job.Success = True Then
+        arrImgV(ImageIndex).Bitmap = Job.GetBitmap()
+    End If   
+    ImageIndex = ImageIndex + 1
+    If ImageIndex = 9 Then ProgressDialogHide
+End Sub

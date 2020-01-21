@@ -1,0 +1,113 @@
+﻿Version=2.71
+IconFile=
+NumberOfModules=2
+Module1=DBUtils
+ModuleVisible1=1
+Module2=WebView
+ModuleVisible2=1
+Package=ch14.gui.b4a.example
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=
+NumberOfFiles=3
+File1=Main.bal
+File2=MyBooks.sqlite
+File3=WebView.bal
+NumberOfLibraries=2
+Library1=core
+Library2=sql
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: 行動圖書館II
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+    Dim SQL1 As SQL
+End Sub
+
+Sub Globals
+    Dim edtId As EditText
+    Dim edtNewPrice As EditText
+    Dim edtPrice As EditText
+    Dim edtSQL As EditText
+    Dim edtTitle As EditText
+    Dim lsvOutput As ListView
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+    Dim DBFileDir As String = File.DirDefaultExternal
+    If FirstTime Then
+        If File.Exists(File.DirDefaultExternal, "MyBooks.sqlite") = False Then
+            DBFileDir = DBUtils.CopyDBFromAssets("MyBooks.sqlite")
+        End If
+        SQL1.Initialize(DBFileDir, "MyBooks.sqlite", True)
+    End If
+    Activity.LoadLayout("Main")
+    Activity.Title = "行動圖書館II"
+    edtId.Text = "M0003"
+    edtTitle.Text = "PHP+MySQL與jQuery Mobile跨行動裝置網站開發"
+    edtPrice.Text = "560"
+    edtNewPrice.Text = "580"
+End Sub
+
+Sub Activity_Resume
+
+End Sub
+
+Sub Activity_Pause(UserClosed As Boolean)
+
+End Sub
+
+Sub Button1_Click
+    Dim record As List
+    Dim fd As Map
+    record.Initialize()
+    fd.Initialize()
+    fd.Put("id", edtId.Text)
+    fd.Put("title", edtTitle.Text)
+    fd.Put("price", edtPrice.Text)
+    record.Add(fd)
+    DBUtils.InsertMaps(SQL1, "Books", record)
+    ToastMessageShow("新增一筆圖書記錄...", False)
+End Sub
+
+Sub Button2_Click
+    Dim key As Map
+    key.Initialize()
+    key.Put("id", edtId.Text)
+    DBUtils.UpdateRecord(SQL1, "Books", "price", edtNewPrice.Text, key)
+    ToastMessageShow("更新一筆圖書記錄...", False)
+End Sub
+
+Sub Button3_Click
+    Dim key As Map
+    key.Initialize()
+    key.Put("id", edtId.Text)
+    DBUtils.DeleteRecord(SQL1, "Books", key)
+    ToastMessageShow("刪除一筆圖書記錄...", False)
+End Sub
+
+Sub Button4_Click
+    StartActivity(WebView)
+End Sub
+
+Sub Button5_Click
+    queryDB(edtSQL.Text)	
+End Sub
+
+Sub queryDB(strSQL As String)
+    lsvOutput.TwoLinesLayout.ItemHeight = 50dip
+    lsvOutput.TwoLinesLayout.Label.TextSize = 10
+    lsvOutput.TwoLinesLayout.SecondLabel.TextSize = 10
+    DBUtils.ExecuteListView(SQL1, strSQL, Null, 0, lsvOutput, True)
+End Sub

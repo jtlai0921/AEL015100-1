@@ -1,0 +1,86 @@
+﻿Version=2.7
+IconFile=
+NumberOfModules=2
+Module1=MyTool
+ModuleVisible1=1
+Module2=MyClass
+ModuleVisible2=1
+Package=ch05.gui.b4a.example
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=MyClass
+NumberOfFiles=1
+File1=Main.bal
+NumberOfLibraries=1
+Library1=core
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: 模組
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+
+End Sub
+
+Sub Globals
+    Dim lblOutput As Label
+    Dim Button1 As Button
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+    Activity.LoadLayout("Main")
+    Activity.Title = "模組"
+    Log("呼叫Activity_Create(): " & FirstTime)
+End Sub
+
+Sub Activity_Resume
+    Log("呼叫Activity_Resume()... ")
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+    Log("呼叫Activity_Pause(): " & UserClosed)
+End Sub
+
+Sub Activity_Touch(Action As Int, X As Float, Y As Float)
+    Dim out As String
+    Select Action
+    Case Activity.ACTION_DOWN
+       out = "ACTION_DOWN" & CRLF
+    Case Activity.ACTION_MOVE
+       out = "ACTION_MOVE" & CRLF
+    Case Activity.ACTION_UP
+       out = "ACTION_UP" & CRLF   
+    End Select
+    out = out & "X: " & X & CRLF
+    out = out & "Y: " & Y & CRLF
+    lblOutput.Text = out
+End Sub
+
+Sub Button1_Click
+    Dim r As Int = 0
+    lblOutput.Text = MyTool.Title & CRLF
+    For i = 1 To 10
+       lblOutput.Text = lblOutput.Text & "10 / " & i 
+       r = MyTool.IntDivide(10, i)
+       lblOutput.Text = lblOutput.Text & " = " & r & CRLF
+       MyTool.Sleep(1000)
+    Next
+End Sub
+
+Sub Button1_LongClick
+    Dim p As MyClass
+    p.Initialize("陳會安", DateTime.DateParse("09/03/1967"))
+    lblOutput.Text = p.GetName() & "-" & p.GetAge()
+End Sub

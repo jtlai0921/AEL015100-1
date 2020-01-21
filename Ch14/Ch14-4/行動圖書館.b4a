@@ -1,0 +1,115 @@
+﻿Version=2.71
+IconFile=
+NumberOfModules=0
+Package=ch14.gui.b4a.example
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=
+NumberOfFiles=2
+File1=Main.bal
+File2=MyBooks.sqlite
+NumberOfLibraries=2
+Library1=core
+Library2=sql
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: 行動圖書館
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+    Dim SQL1 As SQL
+    Dim cursor1 As Cursor
+End Sub
+
+Sub Globals
+    Dim edtId As EditText
+    Dim edtNewPrice As EditText
+    Dim edtPrice As EditText
+    Dim edtSQL As EditText
+    Dim edtTitle As EditText
+    Dim lsvOutput As ListView
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+    If File.Exists(File.DirInternal, "MyBooks.sqlite") = False Then
+        File.Copy(File.DirAssets, "MyBooks.sqlite",File.DirInternal, "MyBooks.sqlite")
+    End If
+    If SQL1.IsInitialized() = False Then
+        SQL1.Initialize(File.DirInternal, "MyBooks.sqlite", False)
+    End If
+    Activity.LoadLayout("Main")
+    Activity.Title = "行動圖書館"
+    edtId.Text = "M0003"
+    edtTitle.Text = "PHP+MySQL與jQuery Mobile跨行動裝置網站開發"
+    edtPrice.Text = "560"
+    edtNewPrice.Text = "580"
+End Sub
+
+Sub Activity_Resume
+
+End Sub
+
+Sub Activity_Pause(UserClosed As Boolean)
+
+End Sub
+
+Sub Button1_Click
+    Dim bid As String = edtId.Text
+	Dim title As String = edtTitle.Text
+	Dim price As Int = edtPrice.Text
+    Dim strSQL As String
+    strSQL = "INSERT INTO Books(id,title,price)" & _
+             "VALUES('" & bid & "','" & title & "'," & price & ")"
+    SQL1.ExecNonQuery(strSQL)
+	Dim dbChange As Int
+	dbChange = SQL1.ExecQuerySingleResult("SELECT changes() FROM Books")
+    ToastMessageShow("新增圖書記錄: " & dbChange & " 筆", False)
+End Sub
+
+Sub Button2_Click
+    Dim bid As String = edtId.Text
+    Dim strSQL As String
+    strSQL = "UPDATE Books SET price ='" & _
+         edtNewPrice.Text & "' WHERE id = '" & bid & "'"
+    SQL1.ExecNonQuery(strSQL)
+    ToastMessageShow("更新一筆圖書記錄...", False)
+End Sub
+
+Sub Button3_Click
+    Dim bid As String = edtId.Text	
+    Dim strSQL As String
+    strSQL = "DELETE FROM Books WHERE id = '" & bid & "'"
+    SQL1.ExecNonQuery(strSQL)
+    ToastMessageShow("刪除一筆圖書記錄...", False)
+End Sub
+
+Sub Button4_Click
+    queryDB("SELECT * FROM Books")
+End Sub
+
+Sub Button5_Click
+    queryDB(edtSQL.Text)	
+End Sub
+
+Sub queryDB(strSQL As String)
+    lsvOutput.Clear()
+    cursor1 = SQL1.ExecQuery(strSQL)
+    lsvOutput.SingleLineLayout.Label.TextSize = 10
+    lsvOutput.SingleLineLayout.ItemHeight = 25dip
+    For i = 0 To cursor1.RowCount - 1
+        cursor1.Position = i
+        lsvOutput.AddSingleLine(cursor1.GetString("id") & _
+                      " : " & cursor1.GetString("title")& _
+                      " " & cursor1.GetLong("price"))
+    Next
+End Sub

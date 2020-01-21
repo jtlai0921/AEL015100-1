@@ -1,0 +1,106 @@
+﻿Version=2.71
+IconFile=
+NumberOfModules=0
+Package=ch15.gui.b4a.example
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=
+NumberOfFiles=1
+File1=Main.bal
+NumberOfLibraries=3
+Library1=core
+Library2=http
+Library3=json
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: 查詢ADR股票資訊
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+    Dim hc As HttpClient
+End Sub
+
+Sub Globals
+    Dim spnStock As Spinner
+    Dim Stocks As Map 
+    Dim urlString As String
+    Dim stockName As String
+    Dim lblC As Label
+    Dim lblCp As Label
+    Dim lblId As Label
+    Dim lblL As Label
+    Dim lblL_cur As Label
+    Dim lblE As Label
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+    Activity.LoadLayout("Main")
+    Activity.Title = "查詢ADR股票資訊"
+    hc.Initialize("Http")
+    Stocks.Initialize()  ' 初始Map物件
+    urlString = "http://finance.google.com/finance/info?client=ig&q="
+    stockName = "NYSE:TSM"
+    Stocks.Put("NYSE:TSM","台積電ADR")
+    Stocks.Put("NYSE:UMC","聯電ADR")
+    Stocks.Put("NYSE:ASX","日月光ADR")
+    Stocks.Put("NYSE:AUO","友達ADR")
+    Stocks.Put("NYSE:CHT","中華電信ADR")
+    Stocks.Put("NASD:SPIL","矽品ADR")
+    For i = 0 To Stocks.Size - 1
+        spnStock.Add(Stocks.GetValueAt(i))
+    Next
+End Sub
+
+Sub Activity_Resume
+
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
+
+Sub Button1_Click
+    Dim req As HttpRequest
+    req.InitializeGet(urlString & stockName)
+    hc.Execute(req, 1)
+    ProgressDialogShow("取得資訊中...")	
+End Sub
+
+Sub spnStock_ItemClick(Position As Int, Value As Object)
+    stockName = Stocks.GetKeyAt(Position)
+    lblE.Text = ""   :   lblId.Text = ""
+    lblL.Text = ""   :   lblL_cur.Text = ""
+    lblC.Text = ""   :   lblCp.Text = ""
+End Sub
+
+Sub Http_ResponseSuccess(Response As HttpResponse, TaskId As Int)
+    Dim rStr As String   
+    rStr = Response.GetString("UTF8")  ' 取得傳回字串
+    Dim JSON As JSONParser
+    JSON.Initialize(rStr)
+    Dim StockMap As Map
+    ' 剖析JSON字串
+    StockMap = JSON.NextObject()
+    lblE.Text = StockMap.Get("e")
+    lblId.Text = StockMap.Get("id")
+    lblL.Text = StockMap.Get("l")
+    lblL_cur.Text = StockMap.Get("l_cur")
+    lblC.Text = StockMap.Get("c")
+    lblCp.Text = StockMap.Get("cp")
+    ProgressDialogHide
+End Sub
+
+Sub Http_ResponseError(Reason As String, StatusCode As Int, TaskId As Int)
+    ToastMessageShow("錯誤: 編號: " & TaskId & ", 原因: " & Reason & ", 狀態碼: " & StatusCode, True)
+    ProgressDialogHide
+End Sub

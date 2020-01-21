@@ -1,0 +1,81 @@
+﻿Version=2.7
+IconFile=
+NumberOfModules=0
+Package=ch10.gui.b4a.example
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=
+NumberOfFiles=1
+File1=Main.bal
+NumberOfLibraries=1
+Library1=core
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: 檔案與資料夾操作
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+
+End Sub
+
+Sub Globals
+    Dim lblOutput As Label
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+    Activity.LoadLayout("Main")
+    Activity.Title = "檔案與資料夾操作"
+End Sub
+
+Sub Activity_Resume
+
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
+
+Sub Button1_Click
+    Dim out As String
+    File.MakeDir(File.DirRootExternal, "temp")
+    out =  "temp目錄存在: " & File.Exists(File.DirRootExternal, "temp") & CRLF
+    out = out & "是目錄: " & File.IsDirectory(File.DirRootExternal, "temp")
+    lblOutput.Text = out
+End Sub
+
+Sub Button2_Click
+    Dim out As String
+    File.WriteString(File.DirRootExternal, "temp.txt", "Test")
+    out =  "temp.txt檔案存在: " & File.Exists(File.DirRootExternal, "temp.txt")
+    lblOutput.Text = out
+End Sub
+
+Sub Button3_Click 
+    Dim out As String
+    File.Copy(File.DirRootExternal, "temp.txt", File.DirRootExternal & "/temp", "temp1.txt")
+    out =  "temp1.txt檔案存在: " & File.Exists(File.DirRootExternal & "/temp", "temp1.txt")
+    lblOutput.Text = out
+End Sub
+
+Sub Button4_Click 
+    Dim out As String
+    If File.Delete(File.DirRootExternal & "/temp", "temp1.txt") Then
+        out =  "temp1.txt檔案已經成功刪除..." & CRLF
+    Else
+        out =  "temp1.txt檔案刪除失敗..." & CRLF
+    End If
+    out =  out & "temp1.txt檔案存在: " & File.Exists(File.DirRootExternal & "/temp", "temp1.txt")
+    lblOutput.Text = out	
+End Sub

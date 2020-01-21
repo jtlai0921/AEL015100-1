@@ -1,0 +1,77 @@
+﻿Version=2.71
+IconFile=
+NumberOfModules=1
+Module1=Shake
+ModuleVisible1=1
+Package=ch16.gui.b4a.example
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=AxisData
+NumberOfFiles=2
+File1=isawherstandingthere.mid
+File2=Main.bal
+NumberOfLibraries=2
+Library1=core
+Library2=phone
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: 搖晃播放音樂
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+    Dim sensor As PhoneSensors
+    Dim MP As MediaPlayer
+End Sub
+
+Sub Globals
+    Dim lblOutput As Label
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+    Activity.LoadLayout("Main")
+    Activity.Title = "搖晃播放音樂"
+    If FirstTime Then
+        sensor.Initialize(sensor.TYPE_ACCELEROMETER)
+        Shake.CallBackActivity = "Main" ' 指定處理搖晃事件的活動
+        MP.Initialize()
+        MP.Load(File.DirAssets, "IsawHerStandingThere.mid")
+    End If
+End Sub
+
+Sub Activity_Resume
+    If sensor.StartListening("sensor") = False Then
+        lblOutput.Text = "裝置不支援加速感測器..."
+    End If
+    lblOutput.Text = "請搖晃裝置播放音樂..."
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+    sensor.StopListening()
+    If MP.IsPlaying() Then
+        MP.Stop()
+    End If
+End Sub
+
+Sub sensor_SensorChanged(Values() As Float)
+    Shake.HandleSensorEvent(Values)
+End Sub
+' 處理搖晃事件Shake
+Sub ShakeEvent
+    Activity.Color = Colors.RGB(Rnd(0, 255), Rnd(0, 255), Rnd(0, 255))
+    MP.Play()
+    MP.Looping = False
+    lblOutput.Text = "音樂正在播放中..."
+End Sub
+
+
+

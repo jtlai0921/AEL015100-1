@@ -1,0 +1,99 @@
+﻿Version=2.7
+IconFile=
+NumberOfModules=0
+Package=ch06.gui.b4a.example
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=
+NumberOfFiles=1
+File1=Main.bal
+NumberOfLibraries=1
+Library1=core
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: BMI計算機
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+
+End Sub
+
+Sub Globals
+    Dim edtHeight As EditText
+    Dim edtWeight As EditText
+    Dim lblOutput As Label
+    Dim lblMessage As Label
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+    Activity.LoadLayout("Main")
+    Activity.Title = "BMI計算機"
+End Sub
+
+Sub Activity_Resume
+
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
+
+Sub BMI
+    Dim h As Double = edtHeight.Text / 100.0
+    Dim w As Double = edtWeight.Text
+    lblOutput.Text = "BMI: " & (w / (h * h)) 
+End Sub
+
+Sub edtHeight_EnterPressed
+    lblMessage.Text = "edtHeight_EnterPressed"
+    If edtHeight.Text.Length > 0 Then
+        BMI
+    End If
+End Sub
+
+Sub edtWeight_EnterPressed
+    lblMessage.Text = "edtWeight_EnterPressed"
+    If edtWeight.Text.Length > 0 Then
+        BMI
+    End If
+End Sub
+
+Sub edtHeight_TextChanged(Old As String, New As String)
+    lblMessage.Text = "edtHeight_TextChanged"
+    If New.Length > 3 Then
+       edtHeight.Text = Old
+       edtHeight.SelectionStart = Old.Length
+    End If
+End Sub
+
+Sub edtWeight_TextChanged(Old As String, New As String)
+    lblMessage.Text = "edtWeight_TextChanged"
+    If New.Length > 2 Then
+       edtWeight.Text = Old
+       edtWeight.SelectionStart = Old.Length
+    End If
+End Sub
+
+Sub edtWeight_FocusChanged(HasFocus As Boolean)
+    If HasFocus Then
+       lblMessage.Text = "請輸入體重(公斤)..."
+    End If
+End Sub
+
+Sub edtHeight_FocusChanged(HasFocus As Boolean)
+    If HasFocus Then
+       lblMessage.Text = "請輸入身高(公分)..."
+    End If
+End Sub

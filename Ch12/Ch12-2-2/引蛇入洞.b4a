@@ -1,0 +1,97 @@
+﻿Version=2.7
+IconFile=
+NumberOfModules=0
+Package=ch12.gui.b4a.example
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=
+NumberOfFiles=2
+File1=Main.bal
+File2=SmallSnake.jpg
+NumberOfLibraries=1
+Library1=core
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: 引蛇入洞
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+    Dim Timer1 As Timer
+End Sub
+
+Sub Globals
+    Dim pnlBoard As Panel
+    Dim moveType As String
+    Dim igvTarget As ImageView	
+    Dim igvCave As ImageView
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+    Activity.LoadLayout("Main")
+    Activity.Title = "引蛇入洞"
+    If FirstTime = True Then
+        igvTarget.Bitmap = LoadBitmap(File.DirAssets, "SmallSnake.jpg")
+        Timer1.Initialize("Timer1", 100)
+    End If
+    Timer1.Enabled = False
+End Sub
+
+Sub Activity_Resume
+
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
+
+Sub btn_Down
+    Dim b As Button
+    b = Sender
+    moveType = b.Tag  ' 移動種類
+    Timer1.Enabled = True
+End Sub
+
+Sub btn_Up
+    Timer1.Enabled = False
+End Sub
+
+Sub Timer1_Tick
+    Dim inc As Int = 2
+    Dim w, h As Int
+    w = igvTarget.Width
+    h = igvTarget.Height
+    Select moveType
+       Case "Up" 
+           igvTarget.Top = igvTarget.Top - inc
+           If igvTarget.Top <= 0 Then igvTarget.Top = pnlBoard.Height - h
+       Case "Down" 
+           igvTarget.Top = igvTarget.Top + inc
+           If igvTarget.Top >= pnlBoard.Height - h Then igvTarget.Top = 0
+       Case "Left" 
+           igvTarget.Left = igvTarget.Left - inc
+           If igvTarget.Left <= 0 Then igvTarget.Left = pnlBoard.Width - w
+       Case "Right" 
+           igvTarget.Left = igvTarget.Left + inc
+           If igvTarget.Left >= pnlBoard.Width - w Then igvTarget.Left = 0
+    End Select	
+    ' 是否成功完成任務引蛇入洞
+    If igvTarget.Top >= igvCave.Top AND igvTarget.Left >= igvCave.Left AND _
+       (igvTarget.Top + h) <= (igvCave.Top + igvCave.Height) AND _
+       (igvTarget.Left + w) <= (igvCave.Left + igvCave.Width) Then 
+       Timer1.Enabled = False
+       Msgbox("已經成功引蛇入洞...", "")  
+    End If
+End Sub
+
+
+

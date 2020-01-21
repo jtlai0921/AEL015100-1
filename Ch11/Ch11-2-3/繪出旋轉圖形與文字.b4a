@@ -1,0 +1,67 @@
+﻿Version=2.7
+IconFile=
+NumberOfModules=0
+Package=ch11.gui.b4a.example
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=
+NumberOfFiles=0
+NumberOfLibraries=1
+Library1=core
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: 繪出旋轉圖形與文字
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+
+End Sub
+
+Sub Globals
+    Dim cvsMain As Canvas
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+    Activity.Title = "繪出旋轉圖形與文字"
+    ' 建立Canvas畫布
+    cvsMain.Initialize(Activity)
+    cvsMain.DrawColor(Colors.White) ' 填滿背景色彩
+End Sub
+
+Sub Activity_Resume
+    ' 繪出長方形
+    Dim rect1 As Rect
+    rect1.Initialize(20dip, 40dip, 150dip, 100dip)
+    cvsMain.DrawRect(rect1, Colors.Red, False, 3dip)
+    ' 繪出旋轉的長方形
+    cvsMain.DrawRectRotated(rect1, Colors.Blue, True, 3dip, 45)
+    ' 繪出橢圓形
+    Dim rect2 As Rect
+    rect2.Initialize(20dip, 150dip, 150dip, 210dip)
+    cvsMain.DrawOval(rect2, Colors.Red, False, 5dip)
+    ' 繪出旋轉的橢圓形
+    cvsMain.DrawOvalRotated(rect2, Colors.Blue, True, 5dip, 45)
+    ' 繪出文字內容
+    cvsMain.DrawText("B4A繪圖", 20dip, 300dip, Typeface.DEFAULT, 20, Colors.Red, "LEFT")
+    ' 繪出旋轉的文字內容
+    cvsMain.DrawTextRotated("B4A繪圖", 20dip, 300dip, Typeface.DEFAULT, 20, Colors.Blue, "LEFT", 45)
+    Activity.Invalidate() ' 更新介面
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
+
+

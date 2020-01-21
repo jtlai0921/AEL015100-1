@@ -1,0 +1,104 @@
+﻿Version=2.7
+IconFile=
+NumberOfModules=0
+Package=ch08.gui.b4a.example
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=
+NumberOfFiles=1
+File1=Main.bal
+NumberOfLibraries=1
+Library1=core
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: 團購點餐券
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+
+End Sub
+
+Sub Globals
+    Dim lblSelected1 As Label
+    Dim lblSelected2 As Label
+    Dim lblSelected3 As Label
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+    Activity.LoadLayout("Main")
+    Activity.Title = "團購點餐券"
+End Sub
+
+Sub Activity_Resume
+
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
+
+Sub Button1_Click
+    Dim out As String = ""
+    Dim items As Map
+    items.Initialize()
+    items.Put("原味披薩", True)
+    items.Put("牛肉披薩", False)
+    items.Put("海鮮披薩", True)
+    items.Put("素食披薩", False)
+    InputMap(items, "主餐四選二")
+    For i = 0 To items.Size - 1
+        If items.GetValueAt(i) Then
+            out = out & items.GetKeyAt(i) & " "
+        End If
+    Next
+    lblSelected1.Text = out
+End Sub
+
+Sub Button2_Click
+    Dim out As String = ""
+    Dim items, result As List
+    items.Initialize()
+    items.Add("薯條")
+    items.Add("地瓜球")
+    items.Add("蘋果派")
+    items.Add("四塊雞塊")
+    result = InputMultiList(items, "副餐四選二")
+    If result.Size <= 0 Then
+        out = "使用者沒有選擇..."
+    Else
+        For i = 0 To result.Size - 1
+            out = out & result.Get(i) & " "
+        Next
+    End If
+    lblSelected2.Text = out
+End Sub
+
+Sub Button3_Click
+    Dim out As String = ""
+    Dim index As Int
+    Dim items As List
+    items.Initialize()
+    items.Add("可樂")
+    items.Add("紅茶")
+    items.Add("綠茶")
+    items.Add("咖啡")
+    index = InputList(items, "飲料四選一", 1)
+    If index = DialogResponse.CANCEL Then
+        out = "使用者沒有選擇..."
+    Else
+        out = index
+    End If
+    lblSelected3.Text = out	
+End Sub

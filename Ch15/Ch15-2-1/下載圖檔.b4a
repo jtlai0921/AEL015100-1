@@ -1,0 +1,84 @@
+﻿Version=2.71
+IconFile=
+NumberOfModules=0
+Package=ch15.gui.b4a.example
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=
+NumberOfFiles=1
+File1=Main.bal
+NumberOfLibraries=2
+Library1=core
+Library2=http
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: 下載圖檔
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+    Dim HttpClient1 As HttpClient
+    Dim MainRequestId As Int : MainRequestId = 100
+End Sub
+
+Sub Globals
+    Dim edtURL As EditText
+    Dim igvOutput As ImageView
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+    If FirstTime Then
+        HttpClient1.Initialize("Http")
+    End If
+    Activity.LoadLayout("Main")
+    Activity.Title = "下載圖檔"
+    edtURL.Text = "http://hueyanchen.myweb.hinet.net/Android/Butterfly.png"
+    igvOutput.Color = Colors.White
+End Sub
+
+Sub Activity_Resume
+
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
+
+Sub Button1_Click
+    Dim request As HttpRequest
+    request.InitializeGet(edtURL.Text)
+    HttpClient1.Execute(request, MainRequestId)
+    ProgressDialogShow("下載圖檔...")
+End Sub
+
+Sub Http_ResponseSuccess(Response As HttpResponse, TaskId As Int)
+    If TaskId = MainRequestId Then ' 下載圖片
+        Response.GetAsynchronously("ImageResponse", _ 
+           File.OpenOutput(File.DirRootExternal, "image" & TaskId, False), True, TaskId)
+    End If
+End Sub
+
+Sub Http_ResponseError(Reason As String, StatusCode As Int, TaskId As Int)
+    ToastMessageShow("錯誤: 編號: " & TaskId & ", 原因: " & Reason & ", 狀態碼: " & StatusCode, True)
+    ProgressDialogHide
+End Sub
+' 完成圖片串流的讀取
+Sub ImageResponse_StreamFinish(Success As Boolean, TaskId As Int)
+    If Success = False Then
+        Msgbox(LastException.Message, "錯誤")
+        Return
+    End If
+    Dim img As Bitmap ' 載入圖片 
+    img = LoadBitmap(File.DirRootExternal, "image" & TaskId)
+    igvOutput.Bitmap = img
+    ProgressDialogHide
+End Sub

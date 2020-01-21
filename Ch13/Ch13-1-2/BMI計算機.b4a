@@ -1,0 +1,74 @@
+﻿Version=2.71
+IconFile=
+NumberOfModules=1
+Module1=BMI
+ModuleVisible1=1
+Package=ch13.gui.b4a.example
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=
+NumberOfFiles=2
+File1=BMI.bal
+File2=Main.bal
+NumberOfLibraries=1
+Library1=core
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: BMI計算機
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+
+End Sub
+
+Sub Globals
+    Dim edtHeight As EditText
+    Dim edtWeight As EditText
+    Dim lblOutput As Label
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+    Activity.LoadLayout("Main")
+    Activity.Title = "BMI計算機"
+    edtHeight.Text = "160"
+    edtWeight.Text = "80"
+End Sub
+
+Sub Activity_Resume
+
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
+
+Sub Button1_Click
+    Dim h As Double = edtHeight.Text / 100.0
+    Dim w As Double = edtWeight.Text
+    Dim result As Float
+    result = w / (h * h)
+    lblOutput.Text = "BMI: " & result
+    Dim n As Notification
+    n.Initialize()   ' 建立Notification物件
+    If result > 25 AND result <= 28 Then
+        n.Icon = "w1"  ' 指定圖示
+        n.SetInfo("BMI計算機", "BMI值太高, 體重稍重...", BMI)
+        n.Notify(1)    ' 顯示通知
+    Else If result > 28 Then
+        n.Icon = "w2"  ' 指定圖示
+        n.SetInfo("BMI計算機", "BMI值太高, 體重過重...", BMI)
+        n.Notify(1)    ' 顯示通知
+    End If
+End Sub

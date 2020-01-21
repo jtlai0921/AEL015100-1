@@ -1,0 +1,80 @@
+﻿Version=2.7
+IconFile=
+NumberOfModules=0
+Package=ch11.gui.b4a.example
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=
+NumberOfFiles=1
+File1=Main.bal
+NumberOfLibraries=1
+Library1=core
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: 基本繪圖功能
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+
+End Sub
+
+Sub Globals
+    Dim pnlGraph As Panel
+    Dim cvsMain, cvsGraph As Canvas
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+    Activity.LoadLayout("Main")
+    Activity.Title = "基本繪圖功能"
+    ' 建立Canvas畫布
+    cvsMain.Initialize(Activity)
+    cvsGraph.Initialize(pnlGraph)
+    cvsGraph.DrawColor(Colors.White) ' 填滿背景色彩
+End Sub
+
+Sub Activity_Resume
+    ' 繪出直線
+    cvsMain.DrawLine(20dip, 20dip, 160dip, 20dip, Colors.Red, 3dip)
+    cvsGraph.DrawLine(20dip, 20dip, 160dip, 20dip, Colors.Blue, 3dip)
+    ' 繪出長方形
+    Dim rect1 As Rect
+    rect1.Initialize(20dip, 40dip, 150dip, 100dip)
+    cvsMain.DrawRect(rect1, Colors.Red, False, 3dip)
+    cvsGraph.DrawRect(rect1, Colors.Blue, True, 3dip)
+    ' 繪出圓形
+    cvsMain.DrawCircle(220dip, 70dip, 30dip, Colors.Red, False, 3dip)
+    Dim centerX, centerY, radius As Float
+    centerX = 220dip
+    centerY = 70dip
+    radius = 30dip
+    cvsGraph.DrawCircle(centerX, centerY, radius, Colors.Blue, True, 3dip)
+    cvsGraph.DrawCircle(centerX, centerY, radius, Colors.Red, False, 3dip)
+    ' 繪出橢圓形
+    Dim rect2 As Rect
+    rect2.Initialize(20dip, 120dip, 150dip, 190dip)
+    cvsMain.DrawOval(rect2, Colors.Red, False, 5dip)
+    cvsGraph.DrawOval(rect2, Colors.Blue, True, 5dip)	
+    ' 繪出文字內容
+    cvsMain.DrawText("B4A繪圖", 190dip, 150dip, Typeface.DEFAULT, 20, Colors.Red, "LEFT")
+    cvsGraph.DrawText("B4A繪圖", 190dip, 150dip, Typeface.DEFAULT, 20, Colors.Blue, "LEFT")
+    Activity.Invalidate() ' 更新介面
+    pnlGraph.Invalidate()
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
+
+

@@ -1,0 +1,108 @@
+﻿Version=2.7
+IconFile=
+NumberOfModules=1
+Module1=ShowImg
+ModuleVisible1=1
+Package=ch12.gui.b4a.example
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=
+NumberOfFiles=1
+File1=Main.bal
+NumberOfLibraries=1
+Library1=core
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: 行動圖庫II
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+
+End Sub
+
+Sub Globals
+    Dim ScrollView1 As ScrollView
+    Dim Pictures As List
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+    If FirstTime Then  ' 只載入一次圖片
+        ProgressDialogShow("正在載入圖片....")
+        LoadImagesFromSD   ' 從SD卡載入圖片
+        ProgressDialogHide
+    End If
+    Activity.LoadLayout("Main")
+    Activity.Title = "行動圖庫II"
+    ' 依圖片數計算內部Panel元件的高
+    ScrollView1.Panel.Height = 200dip * Pictures.Size
+    For i = 0 To Pictures.Size - 1
+        Dim igv As ImageView ' 建立ImageView
+        igv.Initialize("img")
+        igv.Bitmap = Pictures.Get(i)  ' 指定圖片
+        ' 新增圖片至ScrollView
+        ScrollView1.Panel.AddView(igv, 5dip, 5dip + i * 200dip, ScrollView1.Width - 10dip, 190dip)
+    Next
+End Sub
+
+Sub Activity_Resume
+
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
+
+Sub LoadImagesFromSD
+    Pictures.Initialize()
+    Dim myFiles As List
+    Dim imagesFolder As String
+    imagesFolder = File.DirRootExternal & "/Images"
+    ' 檢查目錄是否存在
+    If File.Exists(imagesFolder, "") = False Then
+        ToastMessageShow("圖片資料夾找不到: " & CRLF & imagesFolder, True)
+        Return
+    End If
+    ' 取得此目錄的所有檔案清單
+    myFiles = File.ListFiles(imagesFolder)
+    For i = 0 To myFiles.Size - 1
+        DoEvents    ' 為了ProgressDialog動畫
+        Dim s As String
+        s = myFiles.Get(i)
+        If s.ToLowerCase.EndsWith(".jpg") Then ' 是否是JPG檔
+            Dim b As Bitmap
+            ' 載入圖片
+            b.InitializeSample(imagesFolder, s, 200dip, 200dip) 
+            Pictures.Add(b) ' 新增至List物件
+            If Pictures.Size > 20 Then Exit ' 最多20張圖片
+        End If
+    Next
+    ToastMessageShow("找到 " & Pictures.Size & " 張圖片", True)
+End Sub
+
+Sub img_Click
+    Dim igv As ImageView
+    igv = Sender   ' 取得ImageView元件
+    ' 指定ShowImag活動的行程變數值
+    ShowImg.myPicture = igv.Bitmap
+    StartActivity(ShowImg)  ' 啟動ShowImg活動
+End Sub
+
+Sub btnUp_Click
+    ScrollView1.ScrollPosition = ScrollView1.ScrollPosition - 200dip
+End Sub
+
+Sub btnDown_Click
+    ScrollView1.ScrollPosition = ScrollView1.ScrollPosition + 200dip
+End Sub

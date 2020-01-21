@@ -1,0 +1,110 @@
+﻿Version=2.7
+IconFile=
+NumberOfModules=0
+Package=ch12.gui.b4a.example
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=
+NumberOfFiles=2
+File1=isawherstandingthere.mid
+File2=main.bal
+NumberOfLibraries=1
+Library1=core
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: 音樂播放器
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+    Dim MP As MediaPlayer
+    Dim tmrMedia As Timer
+End Sub
+
+Sub Globals
+    Dim barPosition As SeekBar
+    Dim barVolume As SeekBar
+    Dim lblPosition As Label
+    Dim Looping As ToggleButton
+    Dim Button1 As Button
+    Dim Button2 As Button
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+    If FirstTime Then
+        MP.Initialize()
+        MP.Load(File.DirAssets, "IsawHerStandingThere.mid")
+        tmrMedia.Initialize("tmrMedia", 1000)
+    End If
+    Activity.LoadLayout("Main")
+    Activity.Title = "音樂播放器"
+    ' 指定ToggleButton預設值
+    Looping_CheckedChange(Looping.Checked)
+    Button2.Enabled = False	
+End Sub
+
+Sub Activity_Resume
+
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
+
+Sub Button1_Click
+    MP.Play()      ' 播放
+    tmrMedia.Enabled = True  ' 啟動計時器 
+    Button1.Enabled = False
+    Button2.Enabled = True
+    tmrMedia_Tick            ' 呼叫程序來更新資訊
+End Sub
+
+Sub Button2_Click
+    ' 如果在播放中就暫停 
+    If MP.IsPlaying() Then MP.Pause()
+    tmrMedia.Enabled = False
+    Button1.Enabled = True
+    Button2.Enabled = False	
+End Sub
+
+Sub tmrMedia_Tick
+    If MP.IsPlaying() Then  ' 更新位置資訊
+        barPosition.Value = MP.Position / MP.Duration * 100
+        lblPosition.Text = "位置: " & ConvertToTime(MP.Position) & " (" & ConvertToTime(MP.Duration) & ")"
+    Else  ' 播放結束
+        Button1.Enabled = True
+        Button2.Enabled = False
+        tmrMedia.Enabled = False
+    End If
+End Sub
+
+Sub ConvertToTime(ms As Int) As String  ' 將毫秒轉換成時間格式mm:ss
+    Dim s, m As Int
+    s = Round(ms / 1000)
+    m = Floor(s / 60)
+    s = s Mod 60
+    Return NumberFormat(m, 1, 0) & ":" & NumberFormat(s, 2, 0)
+End Sub
+
+Sub barVolume_ValueChanged(Value As Int, UserChanged As Boolean)
+    MP.SetVolume(barVolume.Value / 100, barVolume.Value / 100)
+End Sub
+
+Sub barPosition_ValueChanged(Value As Int, UserChanged As Boolean)
+    If UserChanged = False Then Return ' 是程式更改
+    MP.Position = Value / 100 * MP.Duration
+    tmrMedia_Tick  ' 呼叫程序來更新資訊
+End Sub
+
+Sub Looping_CheckedChange(Checked As Boolean)
+    MP.Looping = Checked
+End Sub

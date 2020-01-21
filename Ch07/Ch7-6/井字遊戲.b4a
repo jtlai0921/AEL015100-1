@@ -1,0 +1,195 @@
+﻿Version=2.7
+IconFile=
+NumberOfModules=0
+Package=ch08.gui.b4a.example
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=
+NumberOfFiles=1
+File1=Main.bal
+NumberOfLibraries=1
+Library1=core
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: 井字遊戲
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+
+End Sub
+
+Sub Globals
+    Dim turn As Boolean = True
+    Dim board(3, 3) As Int
+    Dim Button1 As Button : Dim Button2 As Button
+    Dim Button3 As Button : Dim Button4 As Button
+    Dim Button5 As Button : Dim Button6 As Button
+    Dim Button7 As Button : Dim Button8 As Button
+    Dim Button9 As Button
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+    Activity.LoadLayout("Main")
+    Activity.Title = "井字遊戲"
+    Activity.AddMenuItem("新遊戲", "NewGame")
+    NewGame
+End Sub
+
+Sub Activity_Resume
+
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
+
+Sub NewGame
+    ' 初始陣列元素值為-3
+    For i = 0 To 2
+       For j = 0 To 2
+           board(i, j) = -3
+       Next
+    Next
+	Button1.Text = "" :	Button2.Text = ""
+	Button3.Text = "" :	Button4.Text = ""
+	Button5.Text = "" :	Button6.Text = ""
+	Button7.Text = "" :	Button8.Text = ""
+	Button9.Text = ""
+End Sub
+
+Sub CheckWin
+    Dim total, total1 As Int
+    ' 檢查每一列和每一欄
+    For i = 0 To 2
+        total = 0 : total1 = 0
+        For j = 0 To 2
+            total = total + board(i, j) ' 每一列
+            total1 = total1 + board(j, i) '每一欄
+        Next
+        If total = 0 OR total1 = 0 Then
+            Msgbox("遊戲結束！○贏", "")
+            Return
+        End If
+        If total = 3 OR total1 = 3 Then
+            Msgbox("遊戲結束！✕贏", "")
+            Return
+        End If
+    Next
+    ' 檢查對角線
+    total = board(0, 0) + board(1, 1) + board(2, 2)
+    total1 = board(2, 0) + board(1, 1) + board(0, 2)
+    If total = 0 OR total1 = 0 Then
+        Msgbox("遊戲結束！○贏", "")
+        Return
+    End If
+    If total = 3 OR total1 = 3 Then
+        Msgbox("遊戲結束！✕贏", "")
+        Return
+    End If
+End Sub
+
+Sub NewGame_Click
+    NewGame
+End Sub
+
+Sub Button9_Click
+    If turn Then
+       Button9.Text = "○" : board(2, 2) = 0
+    Else
+       Button9.Text = "✕" : board(2, 2) = 1
+    End If
+    turn = Not(turn)
+    CheckWin  ' 檢查是否有贏家	
+End Sub
+
+Sub Button8_Click
+    If turn Then
+       Button8.Text = "○" : board(2, 1) = 0
+    Else
+       Button8.Text = "✕" : board(2, 1) = 1
+    End If
+    turn = Not(turn)
+    CheckWin  ' 檢查是否有贏家	
+End Sub
+
+Sub Button7_Click
+    If turn Then
+       Button7.Text = "○" : board(2, 0) = 0
+    Else
+       Button7.Text = "✕" : board(2, 0) = 1
+    End If
+    turn = Not(turn)
+    CheckWin  ' 檢查是否有贏家	
+End Sub
+
+Sub Button6_Click
+    If turn Then
+       Button6.Text = "○" : board(1, 2) = 0
+    Else
+       Button6.Text = "✕" : board(1, 2) = 1
+    End If
+    turn = Not(turn)
+    CheckWin  ' 檢查是否有贏家	
+End Sub
+
+Sub Button5_Click
+    If turn Then
+       Button5.Text = "○" : board(1, 1) = 0
+    Else
+       Button5.Text = "✕" : board(1, 1) = 1
+    End If
+    turn = Not(turn)
+    CheckWin  ' 檢查是否有贏家	
+End Sub
+
+Sub Button4_Click
+    If turn Then
+       Button4.Text = "○" : board(1, 0) = 0
+    Else
+       Button4.Text = "✕" : board(1, 0) = 1
+    End If
+    turn = Not(turn)
+    CheckWin  ' 檢查是否有贏家	
+End Sub
+
+Sub Button3_Click
+    If turn Then
+       Button3.Text = "○" : board(0, 2) = 0
+    Else
+       Button3.Text = "✕" : board(0, 2) = 1
+    End If
+    turn = Not(turn)
+    CheckWin  ' 檢查是否有贏家	
+End Sub
+
+Sub Button2_Click
+    If turn Then
+       Button2.Text = "○" : board(0, 1) = 0
+    Else
+       Button2.Text = "✕" : board(0, 1) = 1
+    End If
+    turn = Not(turn)
+    CheckWin  ' 檢查是否有贏家	
+End Sub
+
+Sub Button1_Click
+    If turn Then
+       Button1.Text = "○" : board(0, 0) = 0
+    Else
+       Button1.Text = "✕" : board(0, 0) = 1
+    End If
+    turn = Not(turn)
+    CheckWin  ' 檢查是否有贏家
+End Sub

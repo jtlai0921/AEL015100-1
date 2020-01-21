@@ -1,0 +1,103 @@
+﻿Version=2.7
+IconFile=
+NumberOfModules=0
+Package=ch04.gui.b4a.example
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=
+NumberOfFiles=1
+File1=main.bal
+NumberOfLibraries=1
+Library1=core
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: B4A內建物件
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+
+End Sub
+
+Sub Globals
+	'These global variables will be redeclared each time the activity is created.
+	'These variables can only be accessed from this module.
+	Dim lblOutput As Label
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+	'Do not forget to load the layout file created with the visual designer. For example:
+	Activity.LoadLayout("Main")
+	Activity.Title = "B4A內建物件"
+End Sub
+
+Sub Activity_Resume
+
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
+
+Sub Button1_Click
+    Dim out = "", str As String
+    Dim b As Boolean, index As Int
+    Dim str1, str2, str3 As String   ' 變數宣告
+    str1 = "程式設計"
+    str2 = "Programming"
+    str3 = " Joe, Jane, Mary, Tom "
+    ' 字串長度與大小寫轉換
+    out = out & "str1.Length: " & str1.Length & CRLF
+    str = str2.ToLowerCase()
+    out = out & "str2.ToLowerCase(): " & str & CRLF
+    str = str2.ToUpperCase()
+    out = out & "str2.ToUpperCase(): " & str & CRLF
+    str = str3.Trim()
+    out = out & "str3.Trim(): " & str & _
+                "(" & str.Length & ")" & CRLF
+    ' 字串取代
+    str = str3.Replace(",", ";")
+    out = out & "str3.Replace(): " & str & CRLF
+    ' 字串比較
+    index = str2.CompareTo("programming")
+    out = out & "str2.CompareTo(): " & index & CRLF
+    index = str2.CompareTo("Programming")
+    out = out & "str2.CompareTo(): " & index & CRLF
+    b = str2.StartsWith("Pro")
+    out = out & "str2.StartsWith(): " & b & CRLF
+    b = str1.EndsWith("設計")
+    out = out & "str1.EndsWith(): " & b & CRLF	
+    b = str2.EqualsIgnoreCase("programming")
+    out = out & "str2.EqualsIgnoreCase(): " & b & CRLF	
+    ' 字串搜尋
+    Dim c As Char
+    c = str2.CharAt(2)
+    out = out & "str2.CharAt(2): " & c & CRLF
+    b = str2.Contains("gram")
+    out = out & "str2.Contains(): " & b & CRLF
+    index = str2.IndexOf("gram")
+    out = out & "str2.IndexOf(): " & index & CRLF
+    index = str2.IndexOf2("gram", 2)
+    out = out & "str2.IndexOf2(): " & index & CRLF
+    index = str2.LastIndexOf("gram")
+    out = out & "str2.LastIndexOf(): " & index & CRLF
+    ' 取出子字串
+    str = str2.SubString(3)
+    out = out & "str2.Substring(): " & str & CRLF	
+    str = str1.SubString(3)
+    out = out & "str2.Substring(): " & str & CRLF
+    str = str2.SubString2(3, 5)
+    out = out & "str2.Substring2(): " & str & CRLF	
+    lblOutput.Text = out
+End Sub

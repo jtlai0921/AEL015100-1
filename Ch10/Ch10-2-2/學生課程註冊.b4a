@@ -1,0 +1,84 @@
+﻿Version=2.7
+IconFile=
+NumberOfModules=0
+Package=ch10.gui.b4a.example
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=
+NumberOfFiles=1
+File1=Main.bal
+NumberOfLibraries=1
+Library1=core
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: 學生課程註冊
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+
+End Sub
+
+Sub Globals
+    Dim ListView1 As ListView
+    Dim edtName As EditText
+    Dim myFile As String = "MyStudents.txt"
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+    Activity.LoadLayout("Main")
+    Activity.Title = "學生課程註冊"
+End Sub
+
+Sub Activity_Resume
+
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
+
+Sub Button1_Click
+    Dim Students As List
+    Students.Initialize()
+    ' 檢查檔案是否存在
+    If File.Exists(File.DirRootExternal, myFile) Then 
+       ' 讀取註冊的學生資料
+       Students = File.ReadList(File.DirRootExternal, myFile) 
+    Else 
+       ToastMessageShow("學生註冊資料不存在...", False) 
+    End If 
+    ' 新增學生
+    Students.Add(edtName.Text)
+    ' 寫入學生註冊資料
+    File.WriteList(File.DirRootExternal, myFile, Students)
+    ToastMessageShow("新增學生註冊資料...", True)
+    edtName.Text = ""
+End Sub
+
+Sub Button2_Click
+    Dim Students As List
+    ' 檢查檔案是否存在
+    If File.Exists(File.DirRootExternal, myFile) Then
+       ' 讀取註冊的學生資料
+       Students = File.ReadList(File.DirRootExternal, myFile)
+       ListView1.Clear()  ' 清除項目資料
+       ' 新增項目資料
+       For i = 0 To Students.Size - 1
+           ListView1.AddSingleLine(Students.Get(i))
+       Next
+    Else 
+       ToastMessageShow("學生註冊資料不存在...", False) 
+    End If 
+End Sub

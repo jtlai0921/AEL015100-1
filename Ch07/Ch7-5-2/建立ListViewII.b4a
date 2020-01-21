@@ -1,0 +1,65 @@
+﻿Version=2.7
+IconFile=
+NumberOfModules=0
+Package=ch07.gui.b4a.example
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=
+NumberOfFiles=4
+File1=Main.bal
+File2=speakerB.jpg
+File3=speakerC.jpg
+File4=speakerD.jpg
+NumberOfLibraries=1
+Library1=core
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: 建立ListViewII
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+
+End Sub
+
+Sub Globals
+    Dim lblOutput As Label
+    Dim ListView1 As ListView
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+    Activity.LoadLayout("Main")
+    Activity.Title = "建立ListViewII"
+    ' 建立項目
+    Dim bmpB, bmpC, bmpD As Bitmap
+    bmpB.Initialize(File.DirAssets, "speakerB.jpg")
+    bmpC.Initialize(File.DirAssets, "speakerC.jpg")
+    bmpD.Initialize(File.DirAssets, "speakerD.jpg")
+    ListView1.AddTwoLines("講師 A","講師A的經歷與專長")
+    ListView1.AddTwoLinesAndBitmap("講師 B","講師B的經歷與專長", bmpB)
+    ListView1.AddTwoLinesAndBitmap("講師 C","講師C的經歷與專長", bmpC)
+    ListView1.AddTwoLinesAndBitmap("講師 D","講師D的經歷與專長", bmpD)
+End Sub
+
+Sub Activity_Resume
+
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
+
+Sub ListView1_ItemClick (Position As Int, Value As Object)
+    lblOutput.Text = Value
+End Sub

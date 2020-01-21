@@ -1,0 +1,82 @@
+﻿Version=2.71
+IconFile=
+NumberOfModules=0
+Package=ch16.gui.b4a.example
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=
+NumberOfFiles=1
+File1=Main.bal
+NumberOfLibraries=2
+Library1=core
+Library2=gps
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: 使用GPS定位服務
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+    Dim myGPS As GPS
+End Sub
+
+Sub Globals
+    Dim lblLat As Label
+    Dim lblLon As Label
+    Dim lblSatellites As Label
+    Dim lblSpeed As Label
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+    Activity.LoadLayout("Main")
+    Activity.Title = "使用GPS定位服務"
+    If FirstTime Then
+        myGPS.Initialize("GPS")
+    End If
+End Sub
+
+Sub Activity_Resume
+    If myGPS.GPSEnabled = False Then
+        ToastMessageShow("請啟用裝置的GPS...", True)
+		StartActivity(myGPS.LocationSettingsIntent) ' 啟動設定頁面
+	Else
+		myGPS.Start(0, 0) ' 啟動GPS
+	End If
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+    myGPS.Stop()
+End Sub
+
+Sub GPS_LocationChanged (Location1 As Location)
+    lblLat.Text = Location1.ConvertToMinutes(Location1.Latitude)
+    lblLon.Text = Location1.ConvertToMinutes(Location1.Longitude)
+    lblSpeed.Text = Location1.Speed
+End Sub
+
+Sub GPS_UserEnabled (Enabled As Boolean)
+    ToastMessageShow("裝置的GPS已經啟用 = " & Enabled, True)
+End Sub
+
+Sub GPS_GpsStatus (Satellites As List)
+    Dim Satellite As GPSSatellite
+    lblSatellites.Text = "衛星資訊: " & CRLF
+    For i = 0 To Satellites.Size - 1
+        Satellite = Satellites.Get(i)
+        lblSatellites.Text = lblSatellites.Text & CRLF & Satellite.Prn & _
+        " " & Satellite.Snr & " " & Satellite.UsedInFix & " " & Satellite.Azimuth _ 
+        & " " & Satellite.Elevation
+    Next
+End Sub
+
+
+

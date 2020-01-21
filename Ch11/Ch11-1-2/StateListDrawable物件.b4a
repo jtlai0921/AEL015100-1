@@ -1,0 +1,70 @@
+﻿Version=2.7
+IconFile=
+NumberOfModules=0
+Package=ch11.gui.b4a.example
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=
+NumberOfFiles=1
+File1=Main.bal
+NumberOfLibraries=1
+Library1=core
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: StateListDrawable物件
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+
+End Sub
+
+Sub Globals
+	Dim btnColor1 As Button
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+	Activity.LoadLayout("Main")
+	Activity.Title = "StateListDrawable物件"
+    BtnColor
+End Sub
+
+Sub Activity_Resume
+
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
+
+Sub BtnColor
+	' Enabled狀態的ColorDrawable物件
+    Dim cdwColorEnabled As ColorDrawable
+    cdwColorEnabled.Initialize(Colors.Blue, 10dip)
+	' Pessed狀態的ColorDrawable物件
+    Dim cdwColorPressed As ColorDrawable
+    cdwColorPressed.Initialize(Colors.Red, 10dip)
+    ' 建立StateListDrawable物件
+    Dim sldColor As StateListDrawable
+    sldColor.Initialize()
+	Dim states(2) As Int  ' 狀態陣列
+    states(0) = sldColor.State_Enabled
+    states(1) = -sldColor.State_Pressed ' 不是Pressed狀態
+    sldColor.addState2(states, cdwColorEnabled)
+    sldColor.addState(sldColor.State_Pressed, cdwColorPressed)
+    ' 指定按鈕的背景屬性 
+    btnColor1.Background = sldColor
+End Sub
+
+

@@ -1,0 +1,70 @@
+﻿Version=2.7
+IconFile=
+NumberOfModules=0
+Package=ch11.gui.b4a.example
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=
+NumberOfFiles=4
+File1=Cow.jpg
+File2=Main.bal
+File3=Mouse.gif
+File4=Snake.jpg
+NumberOfLibraries=1
+Library1=core
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: ImageView元件的使用
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+
+End Sub
+
+Sub Globals
+    Dim igvCow As ImageView
+    Dim igvMouse As ImageView
+    Dim igvOutput As ImageView
+    Dim igvSnake As ImageView
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+    Activity.LoadLayout("Main")
+    Activity.Title = "ImageView元件的使用"
+    ' 載入縮圖
+	igvCow.Bitmap = LoadBitmapSample(File.DirAssets, "Cow.jpg", 100, 100)
+    igvMouse.Bitmap = LoadBitmapSample(File.DirAssets, "Mouse.gif", 100, 100)
+    igvSnake.Bitmap = LoadBitmapSample(File.DirAssets, "Snake.jpg", 100, 100)
+End Sub
+
+Sub Activity_Resume
+
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
+
+Sub igvSnake_Click
+	igvOutput.Bitmap = LoadBitmap(File.DirAssets, "Snake.jpg")	
+End Sub
+
+Sub igvMouse_Click
+	igvOutput.Bitmap = LoadBitmap(File.DirAssets, "Mouse.gif")	
+End Sub
+
+Sub igvCow_Click
+	igvOutput.Bitmap = LoadBitmap(File.DirAssets, "Cow.jpg")	
+End Sub

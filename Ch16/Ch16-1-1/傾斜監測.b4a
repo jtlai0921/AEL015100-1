@@ -1,0 +1,84 @@
+﻿Version=2.71
+IconFile=
+NumberOfModules=0
+Package=ch16.gui.b4a.example
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=
+NumberOfFiles=1
+File1=Main.bal
+NumberOfLibraries=2
+Library1=core
+Library2=phone
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: 傾斜監測
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+    Dim sensor As PhoneSensors
+End Sub
+
+Sub Globals
+    Dim lblBottom As Label
+    Dim lblLeft As Label
+    Dim lblOutput As Label
+    Dim lblRight As Label
+    Dim lblTop As Label
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+    Activity.LoadLayout("Main")
+    Activity.Title = "傾斜監測"
+    If FirstTime Then
+        sensor.Initialize(sensor.TYPE_ACCELEROMETER)
+    End If
+End Sub
+
+Sub Activity_Resume
+    If sensor.StartListening("sensor") = False Then
+        lblOutput.Text = "裝置不支援加速感測器..."
+    End If
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+    sensor.StopListening()
+End Sub
+
+Sub sensor_SensorChanged(Values() As Float)
+    Dim x, y As Float 
+    Dim xFactor, yFactor As Int 
+    x = Values(0) / 10 
+    y = Values(1) / 10 
+    xFactor = Min(Abs(x) * 255, 255)
+    yFactor = Min(Abs(y) * 255, 255)
+    If x > 0 Then 
+        lblRight.Color = Colors.Transparent 
+        lblLeft.Color = Colors.ARGB(xFactor, 255, 255, 0)
+    Else 
+        lblRight.Color = Colors.ARGB(xFactor, 255, 255, 0)
+        lblLeft.Color = Colors.Transparent
+    End If
+    If y > 0 Then 
+        lblTop.Color = Colors.Transparent
+        lblBottom.Color = Colors.ARGB(yFactor, 255, 255, 0)
+    Else 
+        lblTop.Color = Colors.ARGB(yFactor, 255, 255, 0) 
+        lblBottom.Color = Colors.Transparent
+    End If
+    lblOutput.Text = " X軸=" & NumberFormat(Values(0), 0, 3) & _
+                     ", Y軸=" & NumberFormat(Values(1), 0, 3) & _ 
+                     ", Z軸=" & NumberFormat(Values(2), 0, 3)
+End Sub
+
+

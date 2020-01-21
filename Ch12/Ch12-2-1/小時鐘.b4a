@@ -1,0 +1,68 @@
+﻿Version=2.7
+IconFile=
+NumberOfModules=0
+Package=ch12.gui.b4a.example
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=
+NumberOfFiles=1
+File1=Main.bal
+NumberOfLibraries=1
+Library1=core
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: 小時鐘
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+    Dim Timer1 As Timer
+End Sub
+
+Sub Globals
+    Dim lblTime As Label
+    Dim lblCounter As Label
+    Dim count As Int
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+    Activity.LoadLayout("Main")
+    Activity.Title = "小時鐘"
+    count = 1
+    If FirstTime = True Then
+       Timer1.Initialize("Timer1", 1000)
+    End If
+    Timer1.Enabled = True
+End Sub
+
+Sub Activity_Resume
+    Timer1.Enabled = True
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+    Timer1.Enabled = False
+End Sub
+
+Sub Timer1_Tick
+    ShowTime
+    count = count + 1
+    lblCounter.Text = count
+End Sub
+
+Sub ShowTime
+    Dim now As Long
+    DateTime.DateFormat = "h:mm:ss a"
+    now = DateTime.now
+    lblTime.Text = DateTime.Time(now)
+End Sub
+
+

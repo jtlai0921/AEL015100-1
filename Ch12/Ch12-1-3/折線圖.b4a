@@ -1,0 +1,83 @@
+﻿Version=2.7
+IconFile=
+NumberOfModules=2
+Module1=Charts
+ModuleVisible1=1
+Module2=LineChart
+ModuleVisible2=1
+Package=ch12.gui.b4a.example
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=PieItem,PieData,GraphInternal,Graph,LinePoint,LineData,BarData
+NumberOfFiles=1
+File1=Main.bal
+NumberOfLibraries=1
+Library1=core
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: 折線圖
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+    Dim S12(4) As Float
+    Dim S13(4) As Float
+End Sub
+
+Sub Globals
+    Dim edt12Q1 As EditText
+    Dim edt12Q2 As EditText
+    Dim edt12Q3 As EditText
+    Dim edt12Q4 As EditText
+    Dim edt13Q1 As EditText
+    Dim edt13Q2 As EditText
+    Dim edt13Q3 As EditText
+    Dim edt13Q4 As EditText
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+    Activity.LoadLayout("Main")
+    Activity.Title = "折線圖"
+    edt12Q1.Text = "234"
+    edt12Q2.Text = "256"
+    edt12Q3.Text = "453"
+    edt12Q4.Text = "512"
+    edt13Q1.Text = "150"
+    edt13Q2.Text = "211"
+    edt13Q3.Text = "325"
+    edt13Q4.Text = "413"
+End Sub
+
+Sub Activity_Resume
+
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
+
+Sub GetSalesData
+    S12(0) = edt12Q1.Text
+    S12(1) = edt12Q2.Text
+    S12(2) = edt12Q3.Text
+    S12(3) = edt12Q4.Text 
+    S13(0) = edt13Q1.Text
+    S13(1) = edt13Q2.Text
+    S13(2) = edt13Q3.Text
+    S13(3) = edt13Q4.Text  	
+End Sub
+
+Sub Button1_Click
+    GetSalesData
+    StartActivity(LineChart)  ' 啟動LineChart活動
+End Sub
+

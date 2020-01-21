@@ -1,0 +1,99 @@
+﻿Version=2.71
+IconFile=
+NumberOfModules=1
+Module1=ShowImg
+ModuleVisible1=1
+Package=ch11.gui.b4a.example
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=
+NumberOfFiles=8
+File1=IMG_01.jpg
+File2=IMG_02.jpg
+File3=IMG_03.jpg
+File4=IMG_04.jpg
+File5=IMG_05.jpg
+File6=IMG_06.jpg
+File7=IMG_07.jpg
+File8=Main.bal
+NumberOfLibraries=1
+Library1=core
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: 行動圖庫
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+
+End Sub
+
+Sub Globals
+    Dim igv1 As ImageView
+    Dim igv2 As ImageView
+    Dim igv3 As ImageView
+    Dim igv4 As ImageView
+    Dim igv5 As ImageView
+    Dim igv6 As ImageView
+    Dim igv7 As ImageView
+    Dim igv8 As ImageView
+    Dim igv9 As ImageView
+    Dim arrImgV() As ImageView
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+    Activity.LoadLayout("Main")
+    Activity.Title = "行動圖庫"
+    ' 建立ImageView元件陣列
+    arrImgV = Array As ImageView(igv1, igv2, igv3, igv4, _
+                          igv5, igv6, igv7, igv8, igv9)
+    ResetImageView   ' 重設ImageView元件
+End Sub
+
+Sub Activity_Resume
+
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
+
+Sub ResetImageView
+    ' 走訪活動的所有元件
+    For i = 0 To Activity.NumberOfViews - 1
+        ' 判斷是否是ImageView元件
+        If Activity.GetView(i) Is ImageView Then 
+            ' 指定元件的色彩
+            Activity.GetView(i).Color = Colors.White
+        End If	
+    Next
+End Sub
+
+Sub btnLoadImg_Click
+    For i = 1 To 7
+        Dim bd As BitmapDrawable
+        bd.Initialize(LoadBitmap(File.DirAssets, "IMG_0" & i & ".jpg"))
+        arrImgV(i-1).Background = bd  ' 載入圖片的背景
+    Next
+End Sub
+
+Sub img_Click
+    Dim igv As ImageView
+    igv = Sender   ' 取得ImageView元件
+    Dim bd As BitmapDrawable
+    bd = igv.Background   ' 取得元件背景
+    ' 指定ShowImag活動的行程變數值
+    ShowImg.myPicture = bd.Bitmap
+    StartActivity(ShowImg)  ' 啟動ShowImg活動
+End Sub

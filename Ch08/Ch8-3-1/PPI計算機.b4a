@@ -1,0 +1,86 @@
+﻿Version=2.7
+IconFile=
+NumberOfModules=0
+Package=ch08.gui.b4a.example
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=
+NumberOfFiles=0
+NumberOfLibraries=1
+Library1=core
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: PPI計算機
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+
+End Sub
+
+Sub Globals
+    Dim Label1, Label2, Label3 As Label
+    Dim edtA, edtB, edtC As EditText
+    Dim Button1 As Button	
+    Dim lblOutput As Label
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+    Activity.Title = "PPI計算機"
+    Label1.Initialize("")
+    Label1.Gravity = Gravity.CENTER_HORIZONTAL + Gravity.CENTER_VERTICAL
+    Label1.Text = "長邊:"
+    Activity.AddView(Label1, 20dip, 60dip, 80dip, 40dip)
+    edtA.Initialize("")
+    edtA.Text = "1280"
+    Activity.AddView(edtA, 110dip, 60dip, 190dip, 40dip)
+    Label2.Initialize("")
+    Label2.Gravity = Gravity.CENTER_HORIZONTAL + Gravity.CENTER_VERTICAL
+    Label2.Text = "短邊:"
+    Activity.AddView(Label2, 20dip, 120dip, 80dip, 40dip)
+    edtB.Initialize("")
+    edtB.Text = "720"
+    Activity.AddView(edtB, 110dip, 120dip, 190dip, 40dip)
+    Label3.Initialize("")
+    Label3.Gravity = Gravity.CENTER_HORIZONTAL + Gravity.CENTER_VERTICAL
+    Label3.Text = "尺寸:"
+    Activity.AddView(Label3, 20dip, 180dip, 80dip, 40dip)
+    edtC.Initialize("")
+    edtC.Text = "4.3"
+    Activity.AddView(edtC, 110dip, 180dip, 190dip, 40dip)
+    Button1.Initialize("Button1")
+    Button1.Text = "計算"
+    Activity.AddView(Button1, 20dip, 240dip, 190dip, 40dip)
+    lblOutput.Initialize("")
+    lblOutput.Color = Colors.White
+    lblOutput.TextSize = 20
+    lblOutput.TextColor = Colors.Blue
+    lblOutput.Gravity = Gravity.CENTER_HORIZONTAL + Gravity.CENTER_VERTICAL
+    Activity.AddView(lblOutput, 10%x, 300dip, 80%x, 40dip)
+End Sub
+
+Sub Activity_Resume
+
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
+
+Sub Button1_Click()
+    Dim tmp, result As Double
+    tmp = edtA.Text * edtA.Text + edtB.Text * edtB.Text
+    result = Sqrt(tmp) / edtC.Text
+    lblOutput.Text = "PPI值: " & Round(result)
+End Sub

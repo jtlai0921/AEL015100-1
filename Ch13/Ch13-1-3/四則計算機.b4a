@@ -1,0 +1,87 @@
+﻿Version=2.71
+IconFile=
+NumberOfModules=1
+Module1=Error
+ModuleVisible1=1
+Package=ch13.gui.b4a.example
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=
+NumberOfFiles=2
+File1=Error.bal
+File2=Main.bal
+NumberOfLibraries=1
+Library1=core
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: 四則計算機
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+
+End Sub
+
+Sub Globals
+    Dim edtOpd1 As EditText
+    Dim edtOpd2 As EditText
+    Dim lblOutput As Label
+    Dim rdbAdd As RadioButton
+    Dim rdbDivide As RadioButton
+    Dim rdbMultiply As RadioButton
+    Dim rdbSubtract As RadioButton
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+    Activity.LoadLayout("Main")
+    Activity.Title = "四則計算機"
+End Sub
+
+Sub Activity_Resume
+
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
+
+Sub Button1_Click
+    Dim opd1, opd2 As Int
+    Dim result As Double = 0.0
+    opd1 = edtOpd1.Text   ' 取得輸入值
+    opd2 = edtOpd2.Text
+    ' 執行運算
+    If rdbAdd.Checked Then        ' 加
+        result = opd1 + opd2
+    End If
+    If rdbSubtract.Checked Then   ' 減
+        result = opd1 - opd2
+    End If	
+    If rdbMultiply.Checked Then   ' 乘
+        result = opd1 * opd2
+    End If	
+    If rdbDivide.Checked Then     ' 除
+        If opd2 <> 0 Then
+            result = opd1 / opd2
+        Else  ' 除以0
+            Dim n As Notification
+            n.Initialize()   ' 建立Notification物件
+            n.Icon = "icon"  ' 指定圖示
+            n.AutoCancel = True
+            n.SetInfo2("四則計算機", "除以0的錯誤...", "第2個運算元不能為0", Error)
+            n.Notify(1)      ' 顯示通知
+        End If
+    End If	
+	lblOutput.Text = "計算結果: " & result
+End Sub

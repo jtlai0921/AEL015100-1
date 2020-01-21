@@ -1,0 +1,75 @@
+﻿Version=2.7
+IconFile=
+NumberOfModules=0
+Package=ch13.gui.b4a.example
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=
+NumberOfFiles=4
+File1=Main.bal
+File2=MainL.bal
+File3=Pad.bal
+File4=PadL.bal
+NumberOfLibraries=1
+Library1=core
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: 建立多個版面配置檔
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+
+End Sub
+
+Sub Globals
+	'These global variables will be redeclared each time the activity is created.
+	'These variables can only be accessed from this module.
+
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+    Dim layout As String
+    Dim screenSize As Double
+    Dim scale As Float
+    Dim lv As LayoutValues
+    lv = GetDeviceLayoutValues()  ' 取得LayoutValues物件
+    ' 取得螢幕太約的尺寸
+    screenSize = lv.ApproximateScreenSize
+    ' 取得Scale值
+    scale = lv.scale
+    If screenSize >= 7 Then  ' 7吋平板
+        If lv.Width > lv.Height Then
+            layout = "PadL"  ' Landscape
+        Else
+            layout = "Pad"   ' Portrait
+        End If
+    Else        ' 手機
+        If lv.Width > lv.Height Then
+            layout = "MainL" ' Landscape
+        Else
+            layout = "Main"  ' Portrait
+        End If
+    End If
+    Activity.LoadLayout(layout)
+    Activity.Title = layout & " 尺寸: " & screenSize & "/" & scale
+End Sub
+
+Sub Activity_Resume
+
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub

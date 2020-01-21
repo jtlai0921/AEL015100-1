@@ -1,0 +1,81 @@
+﻿Version=2.71
+IconFile=
+NumberOfModules=0
+Package=ch02.gui.b4a.example
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=
+NumberOfFiles=1
+File1=Main.bal
+NumberOfLibraries=1
+Library1=core
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: 兒童數學訓練
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+
+End Sub
+
+Sub Globals
+	'These global variables will be redeclared each time the activity is created.
+	'These variables can only be accessed from this module.
+
+	Dim btnAction As Button
+	Dim edtResult As EditText
+	Dim lblNumber1 As Label
+	Dim lblNumber2 As Label
+	Dim lblResult As Label
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+   Activity.LoadLayout("Main")
+   Activity.Title = "兒童數學訓練"
+   NewQuestion
+End Sub
+
+Sub NewQuestion
+   lblNumber1.Text = Rnd(1, 10)
+   lblNumber2.Text = Rnd(1, 10)
+   lblResult.Text = "請輸入答案..."
+   edtResult.Text = ""
+End Sub
+
+Sub Activity_Resume
+
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
+
+Sub btnAction_Click
+   If btnAction.Text = "回答" Then
+      If edtResult.Text = "" Then
+         Msgbox("沒有輸入答案...", "錯誤")
+      Else
+         If edtResult.Text = lblNumber1.Text + lblNumber2.Text Then
+            lblResult.Text = "答對了..."
+            btnAction.Text = "下一題"
+         Else
+            lblResult.Text = "答錯了, 再試一次.."
+         End If
+      End If
+   Else
+      NewQuestion
+      btnAction.Text = "回答"
+   End If
+End Sub

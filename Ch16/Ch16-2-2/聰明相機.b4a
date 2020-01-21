@@ -1,0 +1,102 @@
+﻿Version=2.71
+IconFile=
+NumberOfModules=1
+Module1=CameraExClass
+ModuleVisible1=1
+Package=ch16.gui.b4a.example
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=CameraInfoAndId,CameraSize,CameraExClass
+NumberOfFiles=2
+File1=Main.bal
+File2=TakePicture.mp3
+NumberOfLibraries=4
+Library1=camera
+Library2=core
+Library3=phone
+Library4=reflection
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: 聰明相機
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+    Dim MP As MediaPlayer
+    Dim sensor As PhoneSensors
+End Sub
+
+Sub Globals
+    Dim camera1 As CameraExClass
+    Dim pnlPreview As Panel
+    Dim Button1 As Button
+    Dim chkAutoFocus As CheckBox
+    Dim lblOutput As Label
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+    Activity.LoadLayout("Main")
+    Activity.Title = "聰明相機"
+    If FirstTime Then
+        MP.Initialize()
+        MP.Load(File.DirAssets, "TakePicture.mp3")
+        sensor.Initialize(sensor.TYPE_ACCELEROMETER)
+    End If
+    Button1.Color = Colors.Transparent
+End Sub
+
+Sub Activity_Resume
+    Button1.Enabled = False
+    camera1.Initialize(pnlPreview, False, Me, "Camera1")
+    If sensor.StartListening("sensor") = False Then
+        lblOutput.Text = "裝置不支援加速感測器..."
+    End If
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+    camera1.Release()
+    sensor.StopListening()
+End Sub
+
+Sub Camera1_Ready(Success As Boolean)
+    If Success Then
+        ' 設定相機參數
+        camera1.SetJpegQuality(90) ' 圖檔品質
+        camera1.CommitParameters()
+        camera1.StartPreview()     ' 開始預覽
+        Button1.Enabled = True
+    Else
+        ToastMessageShow("無法開啟相機...", True)
+    End If
+End Sub
+
+Sub Camera1_PictureTaken(Data() As Byte)
+    ' 儲存照片
+    camera1.SavePictureToFile(Data, File.DirRootExternal, "Pic1.jpg")
+    camera1.StartPreview()  ' 重新啟動預覽	
+    ToastMessageShow("照片已儲存: " & File.Combine(File.DirRootExternal, "Pic.jpg"), True)
+    Button1.Enabled = True
+End Sub
+
+Sub Button1_Click
+    Button1.Enabled = False
+    camera1.TakePicture()
+    MP.Play()  ' 播放音效
+End Sub
+
+Sub sensor_SensorChanged(Values() As Float)
+    If Values(0) > 9.0 OR Values(1) > 9.0 Then
+        lblOutput.Text = "相機是正的.."
+    Else
+        lblOutput.Text = "相機是歪的.."
+    End If
+End Sub

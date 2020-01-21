@@ -1,0 +1,72 @@
+﻿Version=2.7
+IconFile=
+NumberOfModules=0
+Package=ch04.gui.b4a.example
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=Student
+NumberOfFiles=1
+File1=main.bal
+NumberOfLibraries=1
+Library1=core
+@EndOfDesignText@
+ #Region  Project Attributes 
+	#ApplicationLabel: B4A內建物件
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+    ' Student型態
+	Type Student(Name As String, Age As Int)
+End Sub
+
+Sub Globals
+	'These global variables will be redeclared each time the activity is created.
+	'These variables can only be accessed from this module.
+	Dim lblOutput As Label
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+	'Do not forget to load the layout file created with the visual designer. For example:
+	Activity.LoadLayout("Main")
+	Activity.Title = "B4A內建物件"
+End Sub
+
+Sub Activity_Resume
+
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
+
+Sub Button1_Click
+    Dim out = "" As String
+    Dim Students As List
+    Students.Initialize()  ' 初始List物件
+    If Students.IsInitialized() Then ' 已初始
+       For i = 1 To 9  ' 新增9個元素
+          Dim s As Student
+          s.Name = "Student" & i
+          s.Age = Rnd(18, 36)
+          Students.Add(s)
+       Next
+    End If
+    Students.SortType("Age", True)  ' 排序
+    For i = 0 To Students.Size - 1
+       Dim s As Student
+       s = Students.Get(i)
+       out = out & s.Name & "-"
+       out = out & s.Age & CRLF
+    Next
+    lblOutput.Text = out
+End Sub

@@ -1,0 +1,119 @@
+﻿Version=2.71
+IconFile=
+NumberOfModules=0
+Package=ch08.gui.b4a.example
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=
+NumberOfFiles=1
+File1=Main.bal
+NumberOfLibraries=1
+Library1=core
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: 拉霸遊戲
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+
+End Sub
+
+Sub Globals
+    Dim lblMoney As Label
+    Dim lblOriginal As Label
+    Dim lblResult As Label
+    Dim lblSlot1 As Label
+    Dim lblSlot2 As Label
+    Dim lblSlot3 As Label
+    Dim Button1 As Button	
+    Dim bet As Int = 100
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+    Activity.LoadLayout("Main")
+    Activity.Title = "拉霸遊戲"	
+    Button1.Enabled = False
+    Activity.AddMenuItem("新遊戲", "NewGame")
+End Sub
+
+Sub Activity_Resume
+
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
+
+Sub NewGame_Click
+    lblSlot1.Text = 0
+    lblSlot2.Text = 0
+    lblSlot3.Text = 0
+    lblOriginal.Text = "1000.0"
+    lblMoney.Text = "1000.0"
+    lblResult.Text = "== 拉霸遊戲 =="
+    Button1.Enabled = True
+End Sub
+
+Sub StartRoll
+    For i = 1 To 10
+       ' 亂數更新數字
+       lblSlot1.Text = Rnd(0, 9)
+       lblSlot2.Text = Rnd(0, 9)
+       lblSlot3.Text = Rnd(0, 9)       
+       Sleep(100)  ' 暫停100ms
+    Next
+    ' 是否中獎
+    GetAward(lblSlot1.Text, lblSlot2.Text, lblSlot3.Text)
+End Sub
+
+Sub Sleep(ms As Long)   ' 暫停一段時間
+    Dim now As Long
+    If ms > 1000 Then ms = 1000 
+    now = DateTime.now
+    Do Until (DateTime.now > now + ms)
+        DoEvents
+    Loop
+End Sub
+
+Sub GetAward(slot1 As Int, slot2 As Int, slot3 As Int)
+    Dim award As Int ' 獎金
+    If slot1 = 7 AND slot2 = 7 AND slot3 = 7 Then ' 3個7
+        award = bet * 20
+        lblMoney.Text = award + lblOriginal.Text
+        lblResult.Text = "轉中777 = 押注 X 20倍"
+    Else If slot1 = slot2 AND slot2 = slot3 AND slot1 = slot3 Then ' 3個相同
+        award = bet * 10
+        lblMoney.Text = award + lblOriginal.Text
+        lblResult.Text = "轉中3個 = 押注 X 10倍"
+    Else If slot1 = slot2 OR slot2 = slot3 OR slot1 = slot3 Then
+        award = bet * 5 ' 2個相同
+        lblMoney.Text = award + lblOriginal.Text
+        lblResult.Text = "轉中2個 = 押注 X 5倍"
+    Else
+        lblResult.Text = "!!失敗!! 請再轉一次!!"
+    End If
+End Sub
+
+Sub Button1_Click
+    If lblMoney.Text <= 0 Then  ' 是否仍有睹金
+        Msgbox("遊戲結束!", "") ' 沒有
+        Button1.Enabled = False
+    Else  ' 開始轉動轉輪
+        lblResult.Text = "!!!! 轉動中 !!!!"
+        lblMoney.Text = lblMoney.Text - bet
+        lblOriginal.Text = lblMoney.Text
+        StartRoll  ' 轉輪
+    End If
+End Sub

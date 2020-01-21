@@ -1,0 +1,72 @@
+﻿Version=2.7
+IconFile=
+NumberOfModules=0
+Package=ch07.gui.b4a.example
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=
+NumberOfFiles=1
+File1=Main.bal
+NumberOfLibraries=1
+Library1=core
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: 匯率轉換程式
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+
+End Sub
+
+Sub Globals
+    Dim edtAmount As EditText
+    Dim lblOutput As Label
+    Dim spnType As Spinner
+    Dim rate As Double : rate = 29.9
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+    Activity.LoadLayout("Main")
+    Activity.Title = "匯率轉換程式"
+    edtAmount.Text = "1000"
+    ' 新增Spinner的項目
+    spnType.Add("美金")
+    spnType.Add("日元")
+    spnType.Add("人民幣")
+End Sub
+
+Sub Activity_Resume
+
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
+
+Sub spnType_ItemClick(Position As Int, Value As Object)
+    ' 依選擇取得兌換的匯率
+    Select Position
+       Case 0 : rate = 29.9    ' 美金
+       Case 1 : rate = 0.2949  ' 日元
+       Case 2 : rate = 4.861   ' 人民幣
+    End Select
+End Sub
+
+Sub Button1_Click
+    ' 取得輸入的外幣金額
+    Dim amount As Double = edtAmount.Text 
+    ' 計算和顯示兌換的金額
+    lblOutput.Text = "兌換成新台幣的金額: " & (amount * rate)
+End Sub

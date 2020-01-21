@@ -1,0 +1,96 @@
+﻿Version=2.7
+IconFile=
+NumberOfModules=0
+Package=ch10.gui.b4a.example
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=
+NumberOfFiles=1
+File1=Main.bal
+NumberOfLibraries=1
+Library1=core
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: 顯示檔案與資料夾資訊
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+
+End Sub
+
+Sub Globals
+    Dim lblOutput As Label
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+    Activity.LoadLayout("Main")
+    Activity.Title = "顯示檔案與資料夾資訊"
+End Sub
+
+Sub Activity_Resume
+
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
+
+Sub Button1_Click
+    Dim out As String
+    out =  "記憶卡可讀: " & File.ExternalReadable & CRLF
+    out = out & "記憶卡可寫: " & File.ExternalWritable
+    lblOutput.Text = out
+End Sub
+
+Sub Button2_Click
+    Dim out As String
+	Dim d As Long
+    ' 檢查檔案是否存在
+    If File.Exists(File.DirRootExternal, "Books.txt") Then
+        out = "檔名: " & File.Combine(File.DirRootExternal, "Books.txt") & CRLF
+        out = out & "尺寸: " & File.Size(File.DirRootExternal, "Books.txt") & CRLF
+	    d = File.LastModified(File.DirRootExternal, "Books.txt")
+        out = out & "修改日期: " & DateTime.Date(d)
+    Else
+        out = "檔案不存在..."
+    End If
+    lblOutput.Text = out
+End Sub
+
+Sub Button3_Click  ' 顯示檔案清單
+    Dim out As String = ""
+	Dim fileList As List
+	fileList = File.ListFiles(File.DirRootExternal)
+	For i = 0 To fileList.Size - 1
+        ' 不是目錄
+        If Not(File.IsDirectory(File.DirRootExternal,fileList.Get(i))) Then
+           out = out & fileList.Get(i) & CRLF
+        End If
+    Next
+    lblOutput.Text = out	
+End Sub
+
+Sub Button4_Click  ' 顯示目錄清單
+    Dim out As String = ""
+	Dim fileList As List
+	fileList = File.ListFiles(File.DirRootExternal)
+	For i = 0 To fileList.Size - 1
+        ' 是目錄
+        If File.IsDirectory(File.DirRootExternal,fileList.Get(i)) Then
+           out = out & fileList.Get(i) & CRLF
+        End If
+    Next
+    lblOutput.Text = out	
+End Sub

@@ -1,0 +1,81 @@
+﻿Version=2.71
+IconFile=
+NumberOfModules=0
+Package=ch15.gui.b4a.example
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=
+NumberOfFiles=1
+File1=Main.bal
+NumberOfLibraries=4
+Library1=core
+Library2=http
+Library3=httputils2
+Library4=stringutils
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: 下載圖檔II
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+
+End Sub
+
+Sub Globals
+    Dim edtURL As EditText
+    Dim igvOutput As ImageView
+    Dim jsonFile As String 
+    jsonFile = "http://hueyanchen.myweb.hinet.net/Android/book.json"
+    Dim edtOutput As EditText
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+    Activity.LoadLayout("Main")
+    Activity.Title = "下載圖檔II"
+    edtURL.Text = "http://hueyanchen.myweb.hinet.net/Android/Butterfly.png"
+    igvOutput.Color = Colors.White
+End Sub
+
+Sub Activity_Resume
+
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
+
+Sub Button1_Click
+    Dim job, job1 As HttpJob
+    job.Initialize("DownloadImage", Me)
+    job.Download(edtURL.Text)
+    job1.Initialize("DownloadJSON", Me)
+	job1.Download(jsonFile)
+    ProgressDialogShow2("下載檔案...", False)
+End Sub
+
+Sub JobDone(Job As HttpJob)
+    If Job.Success = True Then
+        Select Job.JobName
+            Case "DownloadImage"
+                igvOutput.Bitmap = Job.GetBitmap()
+            Case "DownloadJSON"
+                edtOutput.Text = Job.GetString()
+        End Select
+    Else
+        ToastMessageShow("錯誤: " & Job.ErrorMessage, True)
+    End If
+    Job.Release()
+	ProgressDialogHide
+End Sub

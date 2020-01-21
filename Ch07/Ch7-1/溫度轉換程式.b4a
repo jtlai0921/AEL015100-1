@@ -1,0 +1,78 @@
+﻿Version=2.7
+IconFile=
+NumberOfModules=0
+Package=ch07.gui.b4a.example
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=
+NumberOfFiles=2
+File1=Main.bal
+File2=phone_silent.png
+NumberOfLibraries=1
+Library1=core
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: 溫度轉換程式
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+
+End Sub
+
+Sub Globals
+    Dim edtTemp As EditText
+    Dim lblOutput As Label
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+    Activity.LoadLayout("Main")
+    Activity.Title = "溫度轉換程式"
+    ' 指定EditText元件的初值
+    edtTemp.Text = "100.0"
+    ' 新增擁有3個選項的選單
+    Activity.AddMenuItem("轉成攝氏", "ConvertC")
+    Activity.AddMenuItem("轉成華氏", "ConvertF")
+    ' 新增擁有圖示的選項
+    Activity.AddMenuItem2("結束", "Exit", _
+             LoadBitmap(File.DirAssets, "phone_silent.png"))
+End Sub
+
+Sub Activity_Resume
+
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
+
+Sub ConvertC_Click
+    Dim F As Double = edtTemp.Text
+    Dim C As Double
+    ' 華氏轉攝氏
+    C = (5.0 / 9.0 ) * (F - 32.0)
+    lblOutput.Text = "華氏: " & F & " 度=>攝氏: " & C & " 度"
+End Sub
+
+Sub ConvertF_Click
+    Dim F As Double
+    Dim C As Double = edtTemp.Text
+    ' 攝氏轉華氏
+    F = (9.0 * C) / 5.0 + 32.0
+    lblOutput.Text = "攝氏: " & C & " 度=>華氏: " & F & " 度"
+End Sub
+
+Sub Exit_Click
+    Activity.Finish()  ' 結束活動
+End Sub

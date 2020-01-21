@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="fill_parent" android:layout_height="fill_parent">
+  <AbsoluteLayout android:id="@+id/datewidgetservice_panel1" android:layout_width="60dp" android:layout_height="60dp" android:layout_x="0dp" android:layout_y="0dp" android:visibility="visible" android:background="@drawable/datewidgetservice_panel1_background">
+    <TextView android:id="@+id/datewidgetservice_lbldate" android:layout_width="60dp" android:layout_height="40dp" android:layout_x="0dp" android:layout_y="20dp" android:visibility="visible" android:text="" android:gravity="center_vertical|center_horizontal" android:textColor="#FF000000" android:textSize="30dp" android:textStyle="normal" android:typeface="normal" />
+    <TextView android:id="@+id/datewidgetservice_lblmonth" android:layout_width="60dp" android:layout_height="20dp" android:layout_x="0dp" android:layout_y="0dp" android:visibility="visible" android:text="" android:gravity="center_vertical|center_horizontal" android:textColor="#FF000000" android:textSize="14dp" android:textStyle="normal" android:typeface="normal" android:background="@drawable/datewidgetservice_lblmonth_background" />
+  </AbsoluteLayout>
+</AbsoluteLayout>

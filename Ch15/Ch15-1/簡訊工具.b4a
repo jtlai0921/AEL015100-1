@@ -1,0 +1,68 @@
+﻿Version=2.71
+IconFile=
+NumberOfModules=0
+Package=ch15.gui.b4a.example
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=
+NumberOfFiles=1
+File1=Main.bal
+NumberOfLibraries=2
+Library1=core
+Library2=phone
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: 簡訊工具
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+
+End Sub
+
+Sub Globals
+    Dim edtBody As EditText
+    Dim edtPhone As EditText
+    Dim lsvMessage As ListView
+    Dim mySms As PhoneSms 
+    Dim myInterceptor As SmsInterceptor
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+    Activity.LoadLayout("Main")
+    Activity.Title = "簡訊工具"
+    myInterceptor.Initialize2("Interceptor", 999)
+End Sub
+
+Sub Activity_Resume
+
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
+
+Sub Button1_Click
+    If edtPhone.Text.Length >= 4 Then
+        mySms.Send(edtPhone.Text, edtBody.Text)
+        ToastMessageShow("簡訊己經送出...", False)
+    Else
+        ToastMessageShow("電話號碼長度錯誤...", False)	
+    End If
+End Sub
+
+Sub Interceptor_MessageReceived(From As String, body As String) As Boolean
+    lsvMessage.AddTwoLines(From, body)
+    Return True  ' 取消廣播訊息
+End Sub

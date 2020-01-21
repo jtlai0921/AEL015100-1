@@ -1,0 +1,122 @@
+﻿Version=2.7
+IconFile=
+NumberOfModules=0
+Package=ch10.gui.b4a.example
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=
+NumberOfFiles=4
+File1=Main.bal
+File2=Page1.bal
+File3=Page2.bal
+File4=Page3.bal
+NumberOfLibraries=1
+Library1=core
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: 行動Memo(II)
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+
+End Sub
+
+Sub Globals
+    Dim TabHost1 As TabHost
+    Dim edtNote1, edtNote2, edtNote3 As EditText
+    Dim slot As String = "1"  ' 目前的記事槽編號
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+    Activity.LoadLayout("Main")
+    Activity.Title = "行動Memo(II)-記事1"
+    ' 新增選項選單
+    Activity.AddMenuItem("清除", "ClearNote")
+    Activity.AddMenuItem("儲存", "SaveNote")	
+    Activity.AddMenuItem("結束", "ExitApp")
+    ' 新增標籤
+    TabHost1.AddTab("記事1", "Page1")
+    TabHost1.AddTab("記事2", "Page2")
+    TabHost1.AddTab("記事3", "Page3")
+    ' 調整EditText元件尺寸
+    edtNote1.Width = Activity.Width
+    edtNote1.Height = Activity.Height - 50
+    edtNote2.Width = Activity.Width
+    edtNote2.Height = Activity.Height - 50	
+    edtNote3.Width = Activity.Width
+    edtNote3.Height = Activity.Height - 50	
+End Sub
+
+Sub Activity_Resume
+    ReadFile(slot)
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
+
+Sub ClearNote_Click
+    Select slot
+       Case "1" : edtNote1.Text = ""
+       Case "2" : edtNote2.Text = ""
+       Case "3" : edtNote3.Text = ""
+    End Select	
+End Sub
+
+Sub SaveNote_Click
+    Dim content As String
+    ' 取出指定記事槽的內容
+    Select slot
+       Case "1" : content = edtNote1.Text
+       Case "2" : content = edtNote2.Text
+       Case "3" : content = edtNote3.Text
+    End Select	
+    ' 儲存EditText元件的內容
+    File.WriteString(File.DirInternal, "note" & slot & ".txt", content) 
+    ToastMessageShow("資料儲存至:記事" & slot, True) 
+End Sub
+
+Sub ExitApp_Click
+    Dim result As Int
+    result = Msgbox2("確認結束行動Memo?", "行動Memo", "確認", "", "取消", Null)
+    If result = DialogResponse.POSITIVE Then
+        Activity.Finish()
+        ExitApplication
+    End If
+End Sub
+
+Sub TabHost1_TabChanged
+    slot = TabHost1.CurrentTab + 1  ' 更新記事槽編號
+    Activity.Title = "行動Memo(II)-記事" & slot
+    ReadFile(slot)
+End Sub
+
+Sub ReadFile(cslot As String)
+    Dim content As String = ""
+    ' 檢查檔案是否存在
+    If File.Exists(File.DirInternal,"note" & cslot & ".txt") Then 
+        ' 讀取指定的檔案內容
+        content = File.ReadString(File.DirInternal, "note" & cslot & ".txt") 
+        ToastMessageShow("讀取資料至:記事" & cslot, True) 
+    Else 
+        ToastMessageShow("記事" & cslot & " 目前並沒有資料...", True)
+    End If 
+    ' 更新EditText元件的內容
+    Select cslot
+       Case "1" : edtNote1.Text = content
+       Case "2" : edtNote2.Text = content
+       Case "3" : edtNote3.Text = content
+    End Select	
+End Sub

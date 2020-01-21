@@ -1,0 +1,108 @@
+﻿Version=2.7
+IconFile=
+NumberOfModules=0
+Package=ch11.gui.b4a.example
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=
+NumberOfFiles=2
+File1=Cow.jpg
+File2=Main.bal
+NumberOfLibraries=1
+Library1=core
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: 繪出圖檔
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+
+End Sub
+
+Sub Globals
+    Dim pnlGraph As Panel
+    Dim cvsGraph As Canvas
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+    Activity.LoadLayout("Main")
+    Activity.Title = "繪出圖檔"
+    ' 新增選項選單
+    Activity.AddMenuItem("儲存圖檔", "SaveImage")
+    Activity.AddMenuItem("載入圖檔", "LoadImage")
+    Activity.AddMenuItem("清除畫布", "ClearImage")
+    ' 建立Canvas畫布
+    cvsGraph.Initialize(pnlGraph)
+    cvsGraph.DrawColor(Colors.LightGray) ' 填滿背景色彩
+End Sub
+
+Sub Activity_Resume
+    Dim Bmp As Bitmap
+    Bmp.Initialize(File.DirAssets, "Cow.jpg")
+    ' 繪出圖檔
+    Dim DestRect As Rect
+    DestRect.Initialize(20dip, 10dip, 20dip + 100dip, 10dip + 100dip)
+    cvsGraph.DrawBitmap(Bmp, Null, DestRect)
+    ' 繪出剪裁的圖檔
+    Dim SrcRect As Rect
+    ' 剪裁的Rect物件
+    SrcRect.Initialize(0, 0, Bmp.Width / 2, Bmp.Height)
+    DestRect.Left = 150dip
+    DestRect.Right = 150dip + 100dip
+    cvsGraph.DrawBitmap(Bmp, SrcRect, DestRect)
+    ' 繪出旋轉的圖檔
+    Dim Rect1 As Rect
+    Rect1.Initialize(20dip, 200dip, 20dip + 100dip, 200dip + 100dip)
+    cvsGraph.DrawBitmapRotated(Bmp, Null, Rect1, 70)
+    ' 繪出翻轉的圖檔
+    Rect1.Left = 150dip
+    Rect1.Right = 150dip + 100dip	
+    cvsGraph.DrawBitmapFlipped(Bmp, Null, Rect1, False, True)
+    ' 更新介面
+    pnlGraph.Invalidate()
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
+
+Sub SaveImage_Click
+    Dim Out As OutputStream
+    Out = File.OpenOutput(File.DirRootExternal, "Graph.png", False)
+    cvsGraph.Bitmap.WriteToStream(Out, 100, "PNG")
+    Out.Close
+    ToastMessageShow("儲存Graph.png圖檔成功...", True) 
+End Sub
+
+Sub LoadImage_Click
+    Dim Bmp As Bitmap
+    If File.Exists(File.DirRootExternal, "Graph.png") Then
+        Bmp.Initialize(File.DirRootExternal, "Graph.png")
+        ' 繪出圖檔
+        Dim DestRect As Rect
+        DestRect.Initialize(0, 0, pnlGraph.Width, pnlGraph.Height)
+        cvsGraph.DrawBitmap(Bmp, Null, DestRect)
+        pnlGraph.Invalidate()
+    Else
+        ToastMessageShow("Graph.png圖檔不存在...", True) 
+    End If
+End Sub
+
+Sub ClearImage_Click
+    cvsGraph.DrawColor(Colors.LightGray) ' 填滿背景色彩
+    pnlGraph.Invalidate()
+End Sub
+
+

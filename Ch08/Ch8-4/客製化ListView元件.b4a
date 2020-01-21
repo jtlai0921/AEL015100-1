@@ -1,0 +1,87 @@
+﻿Version=2.7
+IconFile=
+NumberOfModules=0
+Package=ch08.gui.b4a.example
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=
+NumberOfFiles=4
+File1=speakerA.jpg
+File2=speakerB.jpg
+File3=speakerC.jpg
+File4=speakerD.jpg
+NumberOfLibraries=1
+Library1=core
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: 客製化ListView元件
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+
+End Sub
+
+Sub Globals
+    Dim ListView1 As ListView
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+    Activity.Title = "客製化ListView元件"
+    ' 建立與新增ListView元件
+    ListView1.Initialize("ListView1")
+    Activity.AddView(ListView1, 0, 0, 100%x, 100%y)
+    Dim CD As ColorDrawable ' 背景色彩
+    CD.Initialize(Colors.LightGray, 5)
+    ' 客製化SingleLineLayout
+    ListView1.SingleLineLayout.ItemHeight = 60dip
+    ListView1.SingleLineLayout.Background = CD
+    ListView1.SingleLineLayout.Label.TextSize = 20
+    ListView1.SingleLineLayout.Label.TextColor = Colors.Blue
+    ListView1.SingleLineLayout.Label.Gravity = Gravity.CENTER
+    ' 客製化TwoLinesLayout	
+    ListView1.TwoLinesLayout.SecondLabel.TextSize = 10
+    ' 客製化TwoLinesAndBitmap
+    ListView1.TwoLinesAndBitmap.ItemHeight = 70dip
+    ListView1.TwoLinesAndBitmap.Label.Height = 35dip
+    ListView1.TwoLinesAndBitmap.Label.TextSize = 30
+    ' 建立項目
+    Dim bmpA, bmpB, bmpC, bmpD As Bitmap  ' 圖示
+    bmpA.Initialize(File.DirAssets, "speakerA.jpg")
+    bmpB.Initialize(File.DirAssets, "speakerB.jpg")
+    bmpC.Initialize(File.DirAssets, "speakerC.jpg")
+    bmpD.Initialize(File.DirAssets, "speakerD.jpg")
+    ListView1.AddSingleLine("陳會安")
+    ListView1.AddSingleLine("江小魚")
+    ListView1.AddTwoLinesAndBitmap("講師 A","講師B的經歷與專長", bmpA)
+    ListView1.AddTwoLinesAndBitmap("講師 B","講師B的經歷與專長", bmpB)
+    ListView1.AddTwoLinesAndBitmap("講師 C","講師C的經歷與專長", bmpC)
+    ListView1.AddTwoLines("講師 D","講師D的經歷與專長")
+    ListView1.AddTwoLines("講師 E","講師E的經歷與專長")
+    ListView1.AddTwoLines("講師 F","講師F的經歷與專長")
+    ListView1.AddTwoLines("講師 G","講師G的經歷與專長")
+    ListView1.AddTwoLines("講師 H","講師H的經歷與專長")
+End Sub
+
+Sub Activity_Resume
+
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
+
+Sub ListView1_ItemClick (Position As Int, Value As Object)
+    Activity.Title = Value
+End Sub

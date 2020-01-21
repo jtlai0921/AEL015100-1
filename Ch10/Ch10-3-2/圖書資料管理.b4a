@@ -1,0 +1,87 @@
+﻿Version=2.7
+IconFile=
+NumberOfModules=0
+Package=ch10.gui.b4a.example
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=
+NumberOfFiles=1
+File1=Main.bal
+NumberOfLibraries=1
+Library1=core
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: 圖書資料管理
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+
+End Sub
+
+Sub Globals
+    Dim edtTitle As EditText
+    Dim lblOutput As Label
+    Dim myFile As String = "Books.txt"
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+    Activity.LoadLayout("Main")
+    Activity.Title = "圖書資料管理"
+End Sub
+
+Sub Activity_Resume
+
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
+
+Sub Button1_Click
+    Dim title As String = edtTitle.Text
+    Dim tw As TextWriter
+    ' 開啟寫入資料的檔案
+    tw.Initialize(File.OpenOutput(File.DirRootExternal, myFile, False))
+    tw.WriteLine(title)  ' 寫入資料且換行
+    ToastMessageShow("寫入一行資料...", False)
+    tw.Close()
+End Sub
+
+Sub Button2_Click
+    Dim title As String = edtTitle.Text
+    Dim tw As TextWriter
+    ' 開啟新增資料的檔案
+    tw.Initialize(File.OpenOutput(File.DirRootExternal, myFile, True))
+    tw.Write(title & CRLF)  ' 寫入字串, 但沒換行
+    ToastMessageShow("新增一行資料...", False)
+    tw.Close()
+End Sub
+
+Sub Button3_Click
+    Dim tr As TextReader
+    ' 開啟讀取資料的檔案
+    tr.Initialize(File.OpenInput(File.DirRootExternal, myFile))
+    Dim line, out As String
+    out = ""
+    ' 使用迴圈讀取每一行
+    Do While line <> Null
+        line = tr.ReadLine()  ' 讀取每一行
+        If line <> Null Then  ' 是否有資料
+            out = out & line & CRLF  
+        End If	   
+    Loop
+    lblOutput.Text = out
+    tr.Close()
+End Sub

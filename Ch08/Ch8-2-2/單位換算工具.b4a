@@ -1,0 +1,134 @@
+﻿Version=2.7
+IconFile=
+NumberOfModules=0
+Package=ch08.gui.b4a.example
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=
+NumberOfFiles=4
+File1=Main.bal
+File2=Page1.bal
+File3=Page2.bal
+File4=Page3.bal
+NumberOfLibraries=1
+Library1=core
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: 單位換算工具
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+
+End Sub
+
+Sub Globals
+    Dim TabHost1 As TabHost
+	Dim edtTemp As EditText
+	Dim lblOutput As Label
+	Dim edtAmount As EditText
+	Dim lblAmount As Label
+	Dim spnType As Spinner
+	Dim rate As Double : rate = 29.9
+	Dim btnConvert As Button
+	Dim edtLength As EditText
+	Dim lblResult As Label
+	Dim lblUnit As Label
+	Dim lengthType As Boolean : lengthType = False
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+	Activity.LoadLayout("Main")
+	Activity.Title = "單位換算工具-1"
+	' 新增標籤
+	TabHost1.AddTab("溫度", "Page1")
+	TabHost1.AddTab("匯率", "Page2")
+	TabHost1.AddTab("度量衡", "Page3")
+	' 指定EditText元件的初值
+    edtTemp.Text = "100.0"
+    edtAmount.Text = "1000"
+	edtLength.Text = "100.0"
+    ' 新增Spinner的項目
+    spnType.Add("美金")
+    spnType.Add("日元")
+    spnType.Add("人民幣")
+End Sub
+
+Sub Activity_Resume
+
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
+
+Sub TabHost1_TabChanged
+    Activity.Title = "單位換算工具-" & (TabHost1.CurrentTab + 1)
+End Sub
+
+Sub btnConvertF_Click
+	Dim F As Double
+    Dim C As Double = edtTemp.Text
+    ' 攝氏轉華氏
+    F = (9.0 * C) / 5.0 + 32.0
+    lblOutput.Text="攝氏: " & C & " 度=>華氏: " & F & " 度"
+End Sub
+
+Sub btnConvertC_Click
+    Dim F As Double = edtTemp.Text
+    Dim C As Double
+    ' 華氏轉攝氏
+    C = (5.0 / 9.0 ) * (F - 32.0)
+    lblOutput.Text="華氏: " & F & " 度=>攝氏: " & C & " 度"
+End Sub
+
+Sub btnMoney_Click
+	' 取得輸入的外幣金額
+    Dim amount As Double = edtAmount.Text 
+    ' 計算和顯示兌換的金額
+    lblAmount.Text = "兌換成新台幣的金額: " & (amount * rate)
+End Sub
+
+Sub spnType_ItemClick (Position As Int, Value As Object)
+	' 依選擇取得兌換的匯率
+    Select Position
+       Case 0 : rate = 29.9    ' 美金
+       Case 1 : rate = 0.2949  ' 日元
+       Case 2 : rate = 4.861   ' 人民幣
+    End Select
+End Sub
+
+Sub ToggleButton1_CheckedChange(Checked As Boolean)
+	If Checked Then
+       lengthType = True  ' 英製
+       lblUnit.Text = "英吋"
+       btnConvert.Text = "轉換成公制"
+    Else
+       lengthType = False ' 公制
+       lblUnit.Text = "公分"
+       btnConvert.Text = "轉換成英制"
+    End If
+End Sub
+
+Sub btnConvert_Click
+	Dim length As Double = edtLength.Text
+    Dim result As Double = 0.0
+    If lengthType Then  ' 英吋轉公分
+       result = length * 2.54
+       lblResult.Text = "換成公分: " & result
+    Else  ' 公分轉英吋
+       result = length / 2.54
+       lblResult.Text = "換成英吋: " & result
+    End If
+End Sub
